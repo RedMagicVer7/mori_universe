@@ -549,5 +549,38 @@
   </div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+function capturePageAsImage() {
+    const btn = document.querySelector('.screenshot-btn');
+    const originalText = btn.textContent;
+    btn.textContent = '⏳ 正在生成...';
+    btn.disabled = true;
+    btn.style.display = 'none';
+    
+    html2canvas(document.body, {
+        backgroundColor: '#0b0f1a',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        windowWidth: document.body.scrollWidth,
+        windowHeight: document.body.scrollHeight
+    }).then(function(canvas) {
+        btn.style.display = '';
+        btn.textContent = originalText;
+        btn.disabled = false;
+        
+        var link = document.createElement('a');
+        link.download = document.title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_') + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }).catch(function(err) {
+        btn.style.display = '';
+        btn.textContent = originalText;
+        btn.disabled = false;
+        alert('截图失败: ' + err.message);
+    });
+}
+</script>
 </body>
 </html>
