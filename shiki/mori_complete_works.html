@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>森博嗣 · 作品全集 / Mori Hiroshi — Complete Works Collection</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --card: #111827;
+    --border: #1e293b;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-bright: #f1f5f9;
+    /* Series Colors */
+    --sm: #38bdf8;
+    --v: #2dd4bf;
+    --shiki: #f472b6;
+    --g: #a78bfa;
+    --x: #fb923c;
+    --hundred: #fbbf24;
+    --sky: #f87171;
+    --w: #60a5fa;
+    --ww: #818cf8;
+    --void: #4ade80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "SF Pro Text", "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  h1 {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--sm), var(--g), var(--shiki), var(--void));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 2.5rem;
+  }
+
+  /* Tab Navigation */
+  .tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .tab-btn::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .tab-btn:hover { border-color: rgba(148,163,184,0.4); color: var(--text); }
+  .tab-btn.active { color: var(--text-bright); }
+
+  /* Tab color indicators */
+  .tab-btn[data-tab="sm"]::before { background: var(--sm); }
+  .tab-btn[data-tab="v"]::before { background: var(--v); }
+  .tab-btn[data-tab="shiki"]::before { background: var(--shiki); }
+  .tab-btn[data-tab="g"]::before { background: var(--g); }
+  .tab-btn[data-tab="x"]::before { background: var(--x); }
+  .tab-btn[data-tab="hundred"]::before { background: var(--hundred); }
+  .tab-btn[data-tab="sky"]::before { background: var(--sky); }
+  .tab-btn[data-tab="w"]::before { background: var(--w); }
+  .tab-btn[data-tab="ww"]::before { background: var(--ww); }
+  .tab-btn[data-tab="void"]::before { background: var(--void); }
+
+  .tab-btn[data-tab="sm"].active { border-color: var(--sm); box-shadow: 0 0 15px rgba(56,189,248,0.2); }
+  .tab-btn[data-tab="v"].active { border-color: var(--v); box-shadow: 0 0 15px rgba(45,212,191,0.2); }
+  .tab-btn[data-tab="shiki"].active { border-color: var(--shiki); box-shadow: 0 0 15px rgba(244,114,182,0.2); }
+  .tab-btn[data-tab="g"].active { border-color: var(--g); box-shadow: 0 0 15px rgba(167,139,250,0.2); }
+  .tab-btn[data-tab="x"].active { border-color: var(--x); box-shadow: 0 0 15px rgba(251,146,60,0.2); }
+  .tab-btn[data-tab="hundred"].active { border-color: var(--hundred); box-shadow: 0 0 15px rgba(251,191,36,0.2); }
+  .tab-btn[data-tab="sky"].active { border-color: var(--sky); box-shadow: 0 0 15px rgba(248,113,113,0.2); }
+  .tab-btn[data-tab="w"].active { border-color: var(--w); box-shadow: 0 0 15px rgba(96,165,250,0.2); }
+  .tab-btn[data-tab="ww"].active { border-color: var(--ww); box-shadow: 0 0 15px rgba(129,140,248,0.2); }
+  .tab-btn[data-tab="void"].active { border-color: var(--void); box-shadow: 0 0 15px rgba(74,222,128,0.2); }
+
+  /* Tab Content */
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* Series Info Card */
+  .series-info {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .series-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .series-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+  .series-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .meta-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .meta-value {
+    font-size: 0.88rem;
+    color: var(--text-bright);
+  }
+
+  /* Color coded series info */
+  .series-sm .series-title { color: var(--sm); }
+  .series-v .series-title { color: var(--v); }
+  .series-shiki .series-title { color: var(--shiki); }
+  .series-g .series-title { color: var(--g); }
+  .series-x .series-title { color: var(--x); }
+  .series-hundred .series-title { color: var(--hundred); }
+  .series-sky .series-title { color: var(--sky); }
+  .series-w .series-title { color: var(--w); }
+  .series-ww .series-title { color: var(--ww); }
+  .series-void .series-title { color: var(--void); }
+
+  /* Table Styles */
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 40px rgba(0,0,0,0.3);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+  thead th {
+    background: linear-gradient(180deg, #1a2332 0%, #131b2b 100%);
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s ease;
+  }
+  tbody tr:hover { background: rgba(148,163,184,0.03); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td {
+    padding: 1rem 1.2rem;
+    font-size: 0.88rem;
+    vertical-align: middle;
+  }
+  .num {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    width: 40px;
+  }
+  .jp-name { font-weight: 600; color: var(--text-bright); }
+  .en-name { font-size: 0.8rem; color: var(--text-dim); font-style: italic; }
+  .cn-name { color: var(--text); }
+  .year {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+
+  /* Series specific row colors */
+  .series-sm thead th { color: var(--sm); }
+  .series-sm .num { color: var(--sm); }
+  .series-v thead th { color: var(--v); }
+  .series-v .num { color: var(--v); }
+  .series-shiki thead th { color: var(--shiki); }
+  .series-shiki .num { color: var(--shiki); }
+  .series-g thead th { color: var(--g); }
+  .series-g .num { color: var(--g); }
+  .series-x thead th { color: var(--x); }
+  .series-x .num { color: var(--x); }
+  .series-hundred thead th { color: var(--hundred); }
+  .series-hundred .num { color: var(--hundred); }
+  .series-sky thead th { color: var(--sky); }
+  .series-sky .num { color: var(--sky); }
+  .series-w thead th { color: var(--w); }
+  .series-w .num { color: var(--w); }
+  .series-ww thead th { color: var(--ww); }
+  .series-ww .num { color: var(--ww); }
+  .series-void thead th { color: var(--void); }
+  .series-void .num { color: var(--void); }
+
+  /* Footer Statistics */
+  .footer-stats {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .stats-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    text-align: center;
+  }
+  .stat-item .stat-num {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--sm), var(--g));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-item .stat-label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-top: 0.3rem;
+  }
+  .ongoing {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(129,140,248,0.12);
+    color: var(--ww);
+    border: 1px solid rgba(129,140,248,0.3);
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 1rem 0.8rem; }
+    h1 { font-size: 1.5rem; }
+    .tab-nav { gap: 0.4rem; }
+    .tab-btn { padding: 0.5rem 0.7rem; font-size: 0.72rem; }
+    .series-info { padding: 1rem; }
+    .series-title { font-size: 1.1rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .stat-item .stat-num { font-size: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>森博嗣 · 作品全集</h1>
+  <p class="subtitle">Mori Hiroshi — Complete Works Collection</p>
+
+  <!-- Tab Navigation -->
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="sm">S&M (10)</button>
+    <button class="tab-btn" data-tab="v">V系列 (10)</button>
+    <button class="tab-btn" data-tab="shiki">四季 (4)</button>
+    <button class="tab-btn" data-tab="g">G系列 (11)</button>
+    <button class="tab-btn" data-tab="x">X系列 (6)</button>
+    <button class="tab-btn" data-tab="hundred">百年 (3)</button>
+    <button class="tab-btn" data-tab="sky">空中杀手 (6)</button>
+    <button class="tab-btn" data-tab="w">W系列 (10)</button>
+    <button class="tab-btn" data-tab="ww">WW系列 (8+)</button>
+    <button class="tab-btn" data-tab="void">Void Shaper (5)</button>
+  </div>
+
+  <!-- Tab 1: S&M Series -->
+  <div class="tab-content active" id="tab-sm">
+    <div class="series-info series-sm">
+      <div class="series-title">S&M系列（犀川&萌绘）</div>
+      <div class="series-subtitle">Saikawa & Moe Series — 理学部推理剧</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">主角</span><span class="meta-value">犀川创平 & 西之園萌绘</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">1996-1998</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">10册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">逻辑·密室·天才</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-sm">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>英文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">すべてがFになる</td><td class="en-name">The Perfect Insider</td><td class="cn-name">全部成为F</td><td class="year">1996</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">冷たい密室と博士たち</td><td class="en-name">Doctors in Isolated Room</td><td class="cn-name">冰冷密室与博士们</td><td class="year">1996</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">笑わない数学者</td><td class="en-name">Mathematical Goodbye</td><td class="cn-name">不会笑的数学家</td><td class="year">1996</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">詩的私的ジャック</td><td class="en-name">Poetic Private Jack</td><td class="cn-name">诗的私密杰克</td><td class="year">1996</td></tr>
+          <tr><td class="num">5</td><td class="jp-name">封印再度</td><td class="en-name">Sealed Again</td><td class="cn-name">封印再度</td><td class="year">1997</td></tr>
+          <tr><td class="num">6</td><td class="jp-name">幻惑の死と使途</td><td class="en-name">Phantom Death and Use</td><td class="cn-name">幻惑的死与用途</td><td class="year">1997</td></tr>
+          <tr><td class="num">7</td><td class="jp-name">夏のレプリカ</td><td class="en-name">Summer Replica</td><td class="cn-name">夏日复制体</td><td class="year">1997</td></tr>
+          <tr><td class="num">8</td><td class="jp-name">今はもうない</td><td class="en-name">No More Today</td><td class="cn-name">如今已不再</td><td class="year">1998</td></tr>
+          <tr><td class="num">9</td><td class="jp-name">数奇にして模型</td><td class="en-name">Miraculous Model</td><td class="cn-name">数奇而模型</td><td class="year">1998</td></tr>
+          <tr><td class="num">10</td><td class="jp-name">有限と微小のパン</td><td class="en-name">The Perfect Outsider</td><td class="cn-name">有限与微小的面包</td><td class="year">1998</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 2: V Series -->
+  <div class="tab-content" id="tab-v">
+    <div class="series-info series-v">
+      <div class="series-title">V系列（瀬在丸紅子）</div>
+      <div class="series-subtitle">Vシリーズ — 自由奔放的女侦探</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">主角</span><span class="meta-value">保呂草润平 & 瀬在丸紅子</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">1999-2001</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">10册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">盗贼·变装·诡计</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-v">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">黒猫の三角</td><td class="cn-name">黑猫的三角</td><td class="year">1999</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">人形式モナリザ</td><td class="cn-name">人偶式蒙娜丽莎</td><td class="year">1999</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">月は幽咽のデバイス</td><td class="cn-name">月是幽咽的装置</td><td class="year">1999</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">夢・出逢い・魔性</td><td class="cn-name">梦·邂逅·魔性</td><td class="year">1999</td></tr>
+          <tr><td class="num">5</td><td class="jp-name">魔剣天翔</td><td class="cn-name">魔剑天翔</td><td class="year">2000</td></tr>
+          <tr><td class="num">6</td><td class="jp-name">恋恋蓮歩の演習</td><td class="cn-name">恋恋莲步的演习</td><td class="year">2000</td></tr>
+          <tr><td class="num">7</td><td class="jp-name">六人の超音波科学者</td><td class="cn-name">六人的超音波科学家</td><td class="year">2000</td></tr>
+          <tr><td class="num">8</td><td class="jp-name">捩れ屋敷の利鈍</td><td class="cn-name">扭曲屋敷的利钝</td><td class="year">2000</td></tr>
+          <tr><td class="num">9</td><td class="jp-name">朽ちる散る落ちる</td><td class="cn-name">朽坏·散落·降落</td><td class="year">2001</td></tr>
+          <tr><td class="num">10</td><td class="jp-name">赤緑黒白</td><td class="cn-name">赤绿黑白</td><td class="year">2001</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 3: Shiki Series -->
+  <div class="tab-content" id="tab-shiki">
+    <div class="series-info series-shiki">
+      <div class="series-title">四季系列</div>
+      <div class="series-subtitle">四季シリーズ — 真贺田四季的一生</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">主角</span><span class="meta-value">真贺田四季</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2005-2009</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">4册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">天才·成长·超越</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-shiki">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">四季 春</td><td class="cn-name">四季·春</td><td class="year">2005</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">四季 夏</td><td class="cn-name">四季·夏</td><td class="year">2006</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">四季 秋</td><td class="cn-name">四季·秋</td><td class="year">2007</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">四季 冬</td><td class="cn-name">四季·冬</td><td class="year">2009</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 4: G Series -->
+  <div class="tab-content" id="tab-g">
+    <div class="series-info series-g">
+      <div class="series-title">G系列（希腊字母）</div>
+      <div class="series-subtitle">Gシリーズ — Greek Alphabet Series</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">主角群</span><span class="meta-value">加部谷恵美、山吹早月 等</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2004-2018</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">11册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">符号·群像·谜题</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-g">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">φは壊れたね</td><td class="cn-name">φ坏了</td><td class="year">2004</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">θは遊んでくれたよ</td><td class="cn-name">θ陪我玩过</td><td class="year">2005</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">τになるまで待って</td><td class="cn-name">等待到τ</td><td class="year">2005</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">εに誓って</td><td class="cn-name">以ε起誓</td><td class="year">2006</td></tr>
+          <tr><td class="num">5</td><td class="jp-name">λに歯がない</td><td class="cn-name">λ没有齿</td><td class="year">2006</td></tr>
+          <tr><td class="num">6</td><td class="jp-name">ηなのに夢のよう</td><td class="cn-name">虽是η却如梦</td><td class="year">2007</td></tr>
+          <tr><td class="num">7</td><td class="jp-name">目薬αで殺菌します</td><td class="cn-name">用α眼药杀菌</td><td class="year">2008</td></tr>
+          <tr><td class="num">8</td><td class="jp-name">ジグβは神ですか</td><td class="cn-name">吉格β是神吗</td><td class="year">2012</td></tr>
+          <tr><td class="num">9</td><td class="jp-name">キウイγは時計仕掛け</td><td class="cn-name">猕猴桃γ机械表</td><td class="year">2013</td></tr>
+          <tr><td class="num">10</td><td class="jp-name">χの悲劇</td><td class="cn-name">χ的悲剧</td><td class="year">2016</td></tr>
+          <tr><td class="num">11</td><td class="jp-name">ψの悲劇</td><td class="cn-name">ψ的悲剧</td><td class="year">2018</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 5: X Series -->
+  <div class="tab-content" id="tab-x">
+    <div class="series-info series-x">
+      <div class="series-title">X系列</div>
+      <div class="series-subtitle">Xシリーズ — 重复的标记</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">主角</span><span class="meta-value">小川令子</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2007-2009</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">6册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">双重·反复·标记</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-x">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">イナイ×イナイ</td><td class="cn-name">没有×没有</td><td class="year">2007</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">キラレ×キラレ</td><td class="cn-name">闪耀×闪耀</td><td class="year">2008</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">タカイ×タカイ</td><td class="cn-name">高×高</td><td class="year">2008</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">ムカシ×ムカシ</td><td class="cn-name">过去×过去</td><td class="year">2008</td></tr>
+          <tr><td class="num">5</td><td class="jp-name">サイタ×サイタ</td><td class="cn-name">才华×才华</td><td class="year">2009</td></tr>
+          <tr><td class="num">6</td><td class="jp-name">ダマシ×ダマシ</td><td class="cn-name">欺骗×欺骗</td><td class="year">2009</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 6: Hundred Years Series -->
+  <div class="tab-content" id="tab-hundred">
+    <div class="series-info series-hundred">
+      <div class="series-title">百年系列</div>
+      <div class="series-subtitle">百年シリーズ — 遥远未来的密室</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">未来世界</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2006-2009</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">3册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">未来·王国·永生</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-hundred">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">女王の百年密室</td><td class="cn-name">女王的百年密室</td><td class="year">2006</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">百年の子守唄</td><td class="cn-name">百年摇篮曲</td><td class="year">2007</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">百年を数える夜</td><td class="cn-name">数百年的夜晚</td><td class="year">2009</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 7: Sky Crawlers Series -->
+  <div class="tab-content" id="tab-sky">
+    <div class="series-info series-sky">
+      <div class="series-title">空中杀手系列</div>
+      <div class="series-subtitle">スカイ・クロラ — Sky Crawlers Series</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">永恒战争的天空</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2002-2006</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">6册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">战斗·不死·青春</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-sky">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>英文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">スカイ・クロラ</td><td class="en-name">The Sky Crawlers</td><td class="cn-name">空中杀手</td><td class="year">2002</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">ナ・バ・テア</td><td class="en-name">None But Air</td><td class="cn-name">无他之外</td><td class="year">2003</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">ダウン・ツ・ヘヴン</td><td class="en-name">Down to Heaven</td><td class="cn-name">坠入天堂</td><td class="year">2004</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">フラッタ・リンツ・ライフ</td><td class="en-name">Flutter into Life</td><td class="cn-name">颤动而生</td><td class="year">2004</td></tr>
+          <tr><td class="num">5</td><td class="jp-name">ウィル・ウィ・ウォーク</td><td class="en-name">Will We Walk</td><td class="cn-name">我们会前进吗</td><td class="year">2005</td></tr>
+          <tr><td class="num">6</td><td class="jp-name">クレィドゥ・ザ・スカイ</td><td class="en-name">Cradle the Sky</td><td class="cn-name">摇篮般的天空</td><td class="year">2006</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 8: W Series -->
+  <div class="tab-content" id="tab-w">
+    <div class="series-info series-w">
+      <div class="series-title">W系列（沃克隆）</div>
+      <div class="series-subtitle">Wシリーズ — Walkalone Series</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">人工生命体的未来</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2015-2019</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">10册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">AI·意识·存在</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-w">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">彼女は一人で歩くのか？</td><td class="cn-name">她独自步行吗？</td><td class="year">2015</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">魔法の色を知っているか？</td><td class="cn-name">你知道魔法的颜色吗？</td><td class="year">2015</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">風は青海を渡るのか？</td><td class="cn-name">风会渡过青海吗？</td><td class="year">2016</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">デボラ、眠っているのか？</td><td class="cn-name">黛博拉，睡着了吗？</td><td class="year">2016</td></tr>
+          <tr><td class="num">5</td><td class="jp-name">私たちは生きているのか？</td><td class="cn-name">我们活着吗？</td><td class="year">2017</td></tr>
+          <tr><td class="num">6</td><td class="jp-name">青白く輝く月を見たか？</td><td class="cn-name">看到苍白闪烁的月亮吗？</td><td class="year">2017</td></tr>
+          <tr><td class="num">7</td><td class="jp-name">ペガサスの解は虚栄か？</td><td class="cn-name">飞马的答案是虚荣吗？</td><td class="year">2018</td></tr>
+          <tr><td class="num">8</td><td class="jp-name">血か、死か、無か？</td><td class="cn-name">是血，死亡，还是空无？</td><td class="year">2018</td></tr>
+          <tr><td class="num">9</td><td class="jp-name">天空の矢はどこへ？</td><td class="cn-name">天空的箭去哪了？</td><td class="year">2019</td></tr>
+          <tr><td class="num">10</td><td class="jp-name">人間のように泣いたのか？</td><td class="cn-name">像人类一样哭泣了吗？</td><td class="year">2019</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 9: WW Series -->
+  <div class="tab-content" id="tab-ww">
+    <div class="series-info series-ww">
+      <div class="series-title">WW系列</div>
+      <div class="series-subtitle">WWシリーズ — 连载中</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">W系列续篇</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2019-2024</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">8+册 <span class="ongoing">连载中</span></span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">进化·幽灵·意识</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-ww">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">それでもデミアンは一人なのか？</td><td class="cn-name">德米安还是一个人吗？</td><td class="year">2019</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">神はいつ問われるのか？</td><td class="cn-name">何时会追问上帝？</td><td class="year">2020</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">キャサリンはどのように子供を産んだのか？</td><td class="cn-name">凯瑟琳如何生下孩子？</td><td class="year">2021</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">幽霊を創出したのは誰か？</td><td class="cn-name">谁创造了幽灵？</td><td class="year">2021</td></tr>
+          <tr><td class="num">5</td><td class="jp-name">君たちは絶滅危惧種なのか？</td><td class="cn-name">你们是濒危物种吗？</td><td class="year">2022</td></tr>
+          <tr><td class="num">6</td><td class="jp-name">リアルの私はどこにいる？</td><td class="cn-name">真实的我在哪里？</td><td class="year">2023</td></tr>
+          <tr><td class="num">7</td><td class="jp-name">君が見たのは誰の夢？</td><td class="cn-name">你看到的是谁的梦？</td><td class="year">2023</td></tr>
+          <tr><td class="num">8</td><td class="jp-name">何故エリーズは語らなかったのか？</td><td class="cn-name">为什么艾丽丝没有说话？</td><td class="year">2024</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 10: Void Shaper Series -->
+  <div class="tab-content" id="tab-void">
+    <div class="series-info series-void">
+      <div class="series-title">Void Shaper系列</div>
+      <div class="series-subtitle">ヴォイド・シェイパ — 剑与空</div>
+      <div class="series-meta">
+        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">日本时代剧</span></div>
+        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2019-2022</span></div>
+        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">5册</span></div>
+        <div class="meta-item"><span class="meta-label">核心主题</span><span class="meta-value">剑道·虚空·修行</span></div>
+      </div>
+    </div>
+    <div class="table-wrapper series-void">
+      <table>
+        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="jp-name">ヴォイド・シェイパ</td><td class="cn-name">空隙成形者</td><td class="year">2019</td></tr>
+          <tr><td class="num">2</td><td class="jp-name">マインド・クァンチャ</td><td class="cn-name">心灵淬火者</td><td class="year">2020</td></tr>
+          <tr><td class="num">3</td><td class="jp-name">フォグ・ハイダ</td><td class="cn-name">雾气隐者</td><td class="year">2021</td></tr>
+          <tr><td class="num">4</td><td class="jp-name">スカル・ブレーカ</td><td class="cn-name">骨头破碎者</td><td class="year">2021</td></tr>
+          <tr><td class="num">5</td><td class="jp-name">ヴォイド・シェイパ（正伝）</td><td class="cn-name">空隙成形者（正传）</td><td class="year">2022</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer Statistics -->
+  <div class="footer-stats">
+    <div class="stats-title">创作统计 — Statistics</div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">10</div>
+        <div class="stat-label">总系列数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">73+</div>
+        <div class="stat-label">总作品数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">28+</div>
+        <div class="stat-label">创作年数</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1996–2024</div>
+        <div class="stat-label">WW系列 <span class="ongoing">连载中</span></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer">森博嗣 · Mori Hiroshi — 日本推理小说家、工学博士</p>
+
+</div>
+
+<script>
+  // Tab switching logic
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Remove active class from all buttons and contents
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      // Add active class to clicked button and corresponding content
+      btn.classList.add('active');
+      const tabId = 'tab-' + btn.dataset.tab;
+      document.getElementById(tabId).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

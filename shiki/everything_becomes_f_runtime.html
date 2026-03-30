@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全部成为F · 运行时日志</title>
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --card: #111827;
+    --border: #1e293b;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-bright: #f1f5f9;
+    /* Episode colors — matching the chapter color names */
+    --white: #e2e8f0;
+    --amber: #f59e0b;
+    --red: #ef4444;
+    --diamond: #22d3ee;
+    --blue: #3b82f6;
+    --yellow: #eab308;
+    --silver: #94a3b8;
+    --green: #22c55e;
+    --purple: #a855f7;
+    --crimson: #dc2626;
+    --f-gold: #f472b6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "SF Pro Text", "Noto Sans SC", -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 3rem 2rem;
+    min-height: 100vh;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* Header */
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+    background: linear-gradient(135deg, var(--white), var(--red), var(--purple), var(--f-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 3.5rem;
+  }
+  .subtitle code {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.25);
+    color: var(--red);
+    padding: 0.1rem 0.5rem;
+    border-radius: 3px;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.78rem;
+  }
+
+  /* Phase Group */
+  .phase-group {
+    margin-bottom: 3rem;
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-num {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .phase-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-bright);
+  }
+  .phase-title-en {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-left: 0.5rem;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 2.5rem;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.9rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--border) 0%, rgba(30,41,59,0.3) 100%);
+  }
+
+  /* Episode Card */
+  .episode {
+    position: relative;
+    margin-bottom: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.3rem 1.5rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .episode:hover {
+    border-color: rgba(148,163,184,0.3);
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
+  }
+  .episode::before {
+    content: '';
+    position: absolute;
+    left: -1.85rem;
+    top: 1.6rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    z-index: 2;
+  }
+  .ep-top {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.7rem;
+    flex-wrap: wrap;
+  }
+  .ep-badge {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .ep-name-cn {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-bright);
+  }
+  .ep-name-en {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  .ep-sys {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .ep-sys-label {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+  }
+  .sys-tag {
+    display: inline-block;
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.72rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    margin: 0.1rem 0;
+  }
+  .ep-desc {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.75;
+    padding-left: 0.2rem;
+  }
+
+  /* Color-coded accents for each episode dot */
+  .ep-white::before   { border-color: var(--white); background: var(--white); }
+  .ep-amber::before   { border-color: var(--amber); background: var(--amber); }
+  .ep-red::before     { border-color: var(--red); background: var(--red); }
+  .ep-diamond::before { border-color: var(--diamond); background: var(--diamond); }
+  .ep-blue::before    { border-color: var(--blue); background: var(--blue); }
+  .ep-yellow::before  { border-color: var(--yellow); background: var(--yellow); }
+  .ep-silver::before  { border-color: var(--silver); background: var(--silver); }
+  .ep-green::before   { border-color: var(--green); background: var(--green); }
+  .ep-purple::before  { border-color: var(--purple); background: var(--purple); }
+  .ep-crimson::before { border-color: var(--crimson); background: var(--crimson); }
+  .ep-f::before       { border-color: var(--f-gold); background: var(--f-gold); box-shadow: 0 0 12px var(--f-gold); }
+
+  /* Badge colors */
+  .badge-white   { background: rgba(226,232,240,0.1); color: var(--white); border: 1px solid rgba(226,232,240,0.25); }
+  .badge-amber   { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .badge-red     { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .badge-diamond { background: rgba(34,211,238,0.12); color: var(--diamond); border: 1px solid rgba(34,211,238,0.3); }
+  .badge-blue    { background: rgba(59,130,246,0.12); color: var(--blue); border: 1px solid rgba(59,130,246,0.3); }
+  .badge-yellow  { background: rgba(234,179,8,0.12); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .badge-silver  { background: rgba(148,163,184,0.12); color: var(--silver); border: 1px solid rgba(148,163,184,0.3); }
+  .badge-green   { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .badge-purple  { background: rgba(168,85,247,0.12); color: var(--purple); border: 1px solid rgba(168,85,247,0.3); }
+  .badge-crimson { background: rgba(220,38,38,0.12); color: var(--crimson); border: 1px solid rgba(220,38,38,0.3); }
+  .badge-f       { background: rgba(244,114,182,0.12); color: var(--f-gold); border: 1px solid rgba(244,114,182,0.3); }
+
+  .tag-white   { background: rgba(226,232,240,0.08); color: var(--white); border: 1px solid rgba(226,232,240,0.2); }
+  .tag-amber   { background: rgba(245,158,11,0.08); color: var(--amber); border: 1px solid rgba(245,158,11,0.2); }
+  .tag-red     { background: rgba(239,68,68,0.08); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+  .tag-diamond { background: rgba(34,211,238,0.08); color: var(--diamond); border: 1px solid rgba(34,211,238,0.2); }
+  .tag-blue    { background: rgba(59,130,246,0.08); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
+  .tag-yellow  { background: rgba(234,179,8,0.08); color: var(--yellow); border: 1px solid rgba(234,179,8,0.2); }
+  .tag-silver  { background: rgba(148,163,184,0.08); color: var(--silver); border: 1px solid rgba(148,163,184,0.2); }
+  .tag-green   { background: rgba(34,197,94,0.08); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+  .tag-purple  { background: rgba(168,85,247,0.08); color: var(--purple); border: 1px solid rgba(168,85,247,0.2); }
+  .tag-crimson { background: rgba(220,38,38,0.08); color: var(--crimson); border: 1px solid rgba(220,38,38,0.2); }
+  .tag-f       { background: rgba(244,114,182,0.08); color: var(--f-gold); border: 1px solid rgba(244,114,182,0.2); }
+
+  /* Phase header colors */
+  .ph-init  { background: rgba(226,232,240,0.1); color: var(--white); border: 1px solid rgba(226,232,240,0.25); }
+  .ph-kern  { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+  .ph-io    { background: rgba(59,130,246,0.1); color: var(--blue); border: 1px solid rgba(59,130,246,0.25); }
+  .ph-mem   { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+  .ph-exit  { background: rgba(244,114,182,0.1); color: var(--f-gold); border: 1px solid rgba(244,114,182,0.25); }
+
+  /* Final episode highlight */
+  .episode.final {
+    border-color: rgba(244,114,182,0.3);
+    background: linear-gradient(135deg, rgba(244,114,182,0.04) 0%, var(--card) 60%);
+  }
+
+  code {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.78rem;
+    background: rgba(168,85,247,0.1);
+    border: 1px solid rgba(168,85,247,0.2);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    color: #a78bfa;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+  .footer code {
+    font-size: 0.7rem;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 1.5rem 0.8rem; }
+    h1 { font-size: 1.4rem; }
+    .timeline { padding-left: 2rem; }
+    .episode { padding: 1rem 1.1rem; }
+    .episode::before { left: -1.55rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>《全部成为F》 · 运行时日志</h1>
+  <p class="subtitle">すべてがFになる &mdash; Runtime Log &middot; State Machine Trace &middot; <code>exit(0xF)</code></p>
+
+  <!-- ═══════════════════════════════════════ Phase 1 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num ph-init">PHASE 1</span>
+      <span class="phase-title">系统的"冷启动"与环境检查</span>
+      <span class="phase-title-en">Cold Boot &amp; Environment Probe</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 1 -->
+      <div class="episode ep-white">
+        <div class="ep-top">
+          <span class="ep-badge badge-white">EP.01</span>
+          <span class="ep-name-cn">白色聚会</span>
+          <span class="ep-name-en">White Meeting</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-white">System Init</span>
+          <span class="sys-tag tag-white">白盒测试</span>
+        </div>
+        <p class="ep-desc">所有变量处于初始状态。犀川和萌绘进入研究所，就像是探针进入了一个封闭的容器——白盒测试的起点。</p>
+      </div>
+
+      <!-- Ep 2 -->
+      <div class="episode ep-amber">
+        <div class="ep-top">
+          <span class="ep-badge badge-amber">EP.02</span>
+          <span class="ep-name-cn">琥珀色的中庭</span>
+          <span class="ep-name-en">Amber Court</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-amber">Sandbox</span>
+          <span class="sys-tag tag-amber">Encapsulation</span>
+          <span class="sys-tag tag-amber">Air-gapped System</span>
+        </div>
+        <p class="ep-desc">琥珀象征被冻结的时间。真贺田研究所作为物理层面的隔离环境——一个与外界完全断开的气隙系统。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ Phase 2 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num ph-kern">PHASE 2</span>
+      <span class="phase-title">访问控制与核心内核</span>
+      <span class="phase-title-en">Access Control &amp; Kernel</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 3 -->
+      <div class="episode ep-red">
+        <div class="ep-top">
+          <span class="ep-badge badge-red">EP.03</span>
+          <span class="ep-name-cn">魔力红</span>
+          <span class="ep-name-en">Magic Red</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-red">OS Kernel</span>
+          <span class="sys-tag tag-red">底层驱动</span>
+        </div>
+        <p class="ep-desc">全书最硬核的节点——Red Magic 操作系统。章节名直接指向系统的逻辑中枢，主角接触到了内核层。</p>
+      </div>
+
+      <!-- Ep 4 -->
+      <div class="episode ep-diamond">
+        <div class="ep-top">
+          <span class="ep-badge badge-diamond">EP.04</span>
+          <span class="ep-name-cn">七颗钻石</span>
+          <span class="ep-name-en">Seven Diamonds</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-diamond">Primary Key</span>
+          <span class="sys-tag tag-diamond">Unique Constraint</span>
+        </div>
+        <p class="ep-desc">"7"——那个孤独的数字。不可分割、无法约简的核心数据位（Bit），系统全局唯一约束。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ Phase 3 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num ph-io">PHASE 3</span>
+      <span class="phase-title">I/O 交互与边界测试</span>
+      <span class="phase-title-en">I/O Stream &amp; Boundary Testing</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 5 -->
+      <div class="episode ep-blue">
+        <div class="ep-top">
+          <span class="ep-badge badge-blue">EP.05</span>
+          <span class="ep-name-cn">蓝色水域</span>
+          <span class="ep-name-en">Blue Water</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-blue">I/O Stream</span>
+          <span class="sys-tag tag-blue">Peripheral Interface</span>
+        </div>
+        <p class="ep-desc">研究所被海水包围，象征数据的流动边界——外围设备接口层，信息在此进出。</p>
+      </div>
+
+      <!-- Ep 6 -->
+      <div class="episode ep-yellow">
+        <div class="ep-top">
+          <span class="ep-badge badge-yellow">EP.06</span>
+          <span class="ep-name-cn">黄色边缘</span>
+          <span class="ep-name-en">Yellow Edge</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-yellow">Boundary Condition</span>
+          <span class="sys-tag tag-yellow">Edge Case</span>
+          <span class="sys-tag tag-yellow">⚠ WARNING</span>
+        </div>
+        <p class="ep-desc">触及逻辑的极限。黄色在工程中代表"警告"，系统开始出现非预期的报错——死尸出现。</p>
+      </div>
+
+      <!-- Ep 7 -->
+      <div class="episode ep-silver">
+        <div class="ep-top">
+          <span class="ep-badge badge-silver">EP.07</span>
+          <span class="ep-name-cn">银色边界</span>
+          <span class="ep-name-en">Silver Boundary</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-silver">Interface</span>
+          <span class="sys-tag tag-silver">Middleware</span>
+        </div>
+        <p class="ep-desc">银色代表金属感和人造物。物理密室与逻辑密室的交界点——中间件层，协调上下文切换。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ Phase 4 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num ph-mem">PHASE 4</span>
+      <span class="phase-title">递归调用与内存寻址</span>
+      <span class="phase-title-en">Recursive Call &amp; Memory Addressing</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 8 -->
+      <div class="episode ep-green">
+        <div class="ep-top">
+          <span class="ep-badge badge-green">EP.08</span>
+          <span class="ep-name-cn">绿色起源</span>
+          <span class="ep-name-en">Green Origin</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-green">Source Code</span>
+          <span class="sys-tag tag-green">Root Directory</span>
+          <span class="sys-tag tag-green">Traceability</span>
+        </div>
+        <p class="ep-desc">回溯真贺田四季的出生与过去。在系统中，这是溯源——寻找 Bug 被首次定义的初始位置。</p>
+      </div>
+
+      <!-- Ep 9 -->
+      <div class="episode ep-purple">
+        <div class="ep-top">
+          <span class="ep-badge badge-purple">EP.09</span>
+          <span class="ep-name-cn">紫色记忆</span>
+          <span class="ep-name-en">Purple Memory</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-purple">Buffer</span>
+          <span class="sys-tag tag-purple">Cache</span>
+          <span class="sys-tag tag-purple">Memory Dump</span>
+        </div>
+        <p class="ep-desc">通过对四季过去的回忆，主角在提取被系统"隐藏"或"挂起"的数据——唤醒 Suspended Processes。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ Phase 5 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num ph-exit">PHASE 5</span>
+      <span class="phase-title">逻辑爆炸与系统停机</span>
+      <span class="phase-title-en">Logic Explosion &amp; System Shutdown</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 10 -->
+      <div class="episode ep-crimson">
+        <div class="ep-top">
+          <span class="ep-badge badge-crimson">EP.10</span>
+          <span class="ep-name-cn">深红色的广场</span>
+          <span class="ep-name-en">Crimson Square</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-crimson">Deadlock</span>
+          <span class="sys-tag tag-crimson">Critical Section</span>
+          <span class="sys-tag tag-crimson">Race Condition</span>
+        </div>
+        <p class="ep-desc">广场是所有人汇聚的地方，逻辑矛盾在此集中爆发。系统进入争用状态——临界区内的死锁。</p>
+      </div>
+
+      <!-- Ep 11 — FINAL -->
+      <div class="episode ep-f final">
+        <div class="ep-top">
+          <span class="ep-badge badge-f">EP.11 ◈ FINAL</span>
+          <span class="ep-name-cn">全部成为F</span>
+          <span class="ep-name-en">Everything Becomes F</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag tag-f">Integer Overflow</span>
+          <span class="sys-tag tag-f">Termination</span>
+          <span class="sys-tag tag-f">return 0xFFFFFFFF</span>
+        </div>
+        <p class="ep-desc">当计数器累加到 32 位的极限，系统不再处理任何逻辑，直接执行了退出操作。这不仅是真贺田四季的逃脱，也是这段"程序"运行完毕后的 <code>Exit Code</code>。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    森博嗣 &middot; すべてがFになる &middot; The Perfect Insider<br>
+    <code>init()</code> → <code>sandbox()</code> → <code>kernel()</code> → <code>io_test()</code> → <code>mem_dump()</code> → <code>deadlock()</code> → <code>return 0xF;</code><br>
+    一个完整的算法执行流程图 &mdash; 从冷启动到缓冲区溢出的全生命周期
+  </div>
+
+</div>
+</body>
+</html>
