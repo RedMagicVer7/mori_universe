@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>森博嗣 · 全系架构与数理逻辑图谱</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --card: #111827;
+    --border: #1e293b;
+    --sm: #38bdf8;
+    --v: #2dd4bf;
+    --shiki: #f472b6;
+    --g: #a78bfa;
+    --x: #fb923c;
+    --century: #fbbf24;
+    --sky: #f87171;
+    --w: #60a5fa;
+    --ww: #818cf8;
+    --void: #4ade80;
+    --text: #e2e8f0;
+    --text-dim: #94a3b8;
+    --text-bright: #f1f5f9;
+    --code-bg: rgba(167,139,250,0.1);
+    --code-border: rgba(167,139,250,0.2);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "SF Pro Text", "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 1.5rem 0;
+  }
+  .container { max-width: 100%; margin: 0 auto; padding: 0 1rem; }
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--sm), var(--g), var(--shiki));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-bottom: 2rem;
+    letter-spacing: 0.1em;
+  }
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .tab-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.7rem 1.4rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    font-family: inherit;
+  }
+  .tab-btn:hover { border-color: var(--sm); color: var(--text); }
+  .tab-btn.active {
+    background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(167,139,250,0.15));
+    border-color: var(--sm);
+    color: var(--text-bright);
+  }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  /* Table */
+  .table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 80px rgba(56,189,248,0.03), 0 0 40px rgba(129,140,248,0.03);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1200px;
+  }
+  thead th {
+    background: linear-gradient(180deg, #1a2332 0%, #131b2b 100%);
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sm);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s ease;
+  }
+  tbody tr:hover { background: rgba(56,189,248,0.03); }
+  tbody td {
+    padding: 1.2rem 1rem;
+    vertical-align: top;
+    font-size: 0.85rem;
+    line-height: 1.75;
+  }
+  /* Series Colors */
+  .series-sm { border-left: 3px solid var(--sm); }
+  .series-v { border-left: 3px solid var(--v); }
+  .series-shiki { border-left: 3px solid var(--shiki); }
+  .series-g { border-left: 3px solid var(--g); }
+  .series-x { border-left: 3px solid var(--x); }
+  .series-century { border-left: 3px solid var(--century); }
+  .series-sky { border-left: 3px solid var(--sky); }
+  .series-w { border-left: 3px solid var(--w); }
+  .series-ww { border-left: 3px solid var(--ww); }
+  .series-void { border-left: 3px solid var(--void); }
+  .series-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    margin-bottom: 0.4rem;
+  }
+  .tag-sm { background: rgba(56,189,248,0.15); color: var(--sm); border: 1px solid rgba(56,189,248,0.3); }
+  .tag-v { background: rgba(45,212,191,0.15); color: var(--v); border: 1px solid rgba(45,212,191,0.3); }
+  .tag-shiki { background: rgba(244,114,182,0.15); color: var(--shiki); border: 1px solid rgba(244,114,182,0.3); }
+  .tag-g { background: rgba(167,139,250,0.15); color: var(--g); border: 1px solid rgba(167,139,250,0.3); }
+  .tag-x { background: rgba(251,146,60,0.15); color: var(--x); border: 1px solid rgba(251,146,60,0.3); }
+  .tag-century { background: rgba(251,191,36,0.15); color: var(--century); border: 1px solid rgba(251,191,36,0.3); }
+  .tag-sky { background: rgba(248,113,113,0.15); color: var(--sky); border: 1px solid rgba(248,113,113,0.3); }
+  .tag-w { background: rgba(96,165,250,0.15); color: var(--w); border: 1px solid rgba(96,165,250,0.3); }
+  .tag-ww { background: rgba(129,140,248,0.15); color: var(--ww); border: 1px solid rgba(129,140,248,0.3); }
+  .tag-void { background: rgba(74,222,128,0.15); color: var(--void); border: 1px solid rgba(74,222,128,0.3); }
+  .series-name { font-weight: 700; font-size: 0.95rem; color: var(--text-bright); }
+  .series-sub { font-size: 0.75rem; color: var(--text-dim); font-style: italic; }
+  code {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.78rem;
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    color: var(--g);
+  }
+  /* Phase Cards */
+  .phase-grid {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .phase-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+  .phase-card:hover {
+    border-color: var(--sm);
+    box-shadow: 0 0 30px rgba(56,189,248,0.08);
+  }
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .phase-num {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+  }
+  .phase-title { font-size: 1.1rem; font-weight: 700; color: var(--text-bright); }
+  .phase-subtitle { font-size: 0.8rem; color: var(--text-dim); margin-left: auto; font-style: italic; }
+  .phase-content { font-size: 0.85rem; color: var(--text-dim); line-height: 1.8; }
+  .phase-series {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .series-badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  /* Evolution Track */
+  .evolution-track {
+    display: grid;
+    gap: 1rem;
+  }
+  .evo-stage {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+  .evo-stage:hover { border-color: var(--sm); }
+  .evo-label {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    text-align: center;
+  }
+  .evo-content h4 { font-size: 0.9rem; color: var(--text-bright); margin-bottom: 0.4rem; }
+  .evo-content p { font-size: 0.82rem; color: var(--text-dim); }
+  .footer {
+    text-align: center;
+    margin-top: 2.5rem;
+    color: var(--text-dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+  @media (max-width: 768px) {
+    body { padding: 1rem 0.5rem; }
+    h1 { font-size: 1.3rem; }
+    .tabs { gap: 0.3rem; }
+    .tab-btn { padding: 0.5rem 0.8rem; font-size: 0.75rem; }
+    tbody td { padding: 0.9rem 0.7rem; font-size: 0.8rem; }
+    .evo-stage { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>森博嗣 · 全系架构与数理逻辑图谱</h1>
+  <p class="subtitle">Mori Hiroshi — Universe System Architecture & Mathematical Logic Map</p>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('overview')">全系架构总览</button>
+    <button class="tab-btn" onclick="showTab('evolution')">系统演进路线</button>
+    <button class="tab-btn" onclick="showTab('sm-detail')">S&M系列 P0级异常排查表</button>
+    <button class="tab-btn" onclick="showTab('saikawa')">犀川架构师演进路线</button>
+  </div>
+
+  <!-- Tab 1: 全系架构总览 -->
+  <div id="overview" class="tab-content active">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:14%">系列名称</th>
+            <th style="width:18%">核心书目</th>
+            <th style="width:22%">核心数理/编程/AI 原理</th>
+            <th style="width:22%">核心哲学命题</th>
+            <th style="width:8%">册数</th>
+            <th style="width:16%">时间跨度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="series-sm">
+              <span class="series-tag tag-sm">S&M</span>
+              <div class="series-name">S&M系列</div>
+              <div class="series-sub">犀川創平 & 西之園萌絵</div>
+            </td>
+            <td>《全部成为F》《冰冷密室与博士们》《笑わない数学者》《詩的私的ジャック》《封印再度》等</td>
+            <td><code>Sandbox Escape</code> 沙盒逃逸、<code>Integer Overflow</code> 整数溢出、<code>Hash Collision</code> 哈希碰撞、<code>Deadlock</code> 死锁、前端渲染欺骗</td>
+            <td><strong>Unit Testing</strong> — 逻辑的单元测试：每一个案件都是对「理性能否解释世界」的边界测试</td>
+            <td><strong>10册</strong></td>
+            <td>1996 - 1998</td>
+          </tr>
+          <tr>
+            <td class="series-v">
+              <span class="series-tag tag-v">V</span>
+              <div class="series-name">V系列</div>
+              <div class="series-sub">瀬在丸紅子</div>
+            </td>
+            <td>《黒猫の三角》《人形式モナリザ》《月は幽咽のデバイス》《夢・出逢い・魔性》《魔剣天翔》等</td>
+            <td><code>Pattern Recognition</code> 知觉心理学与模式识别、<code>Symmetry Breaking</code> 对称性破缺、视觉欺骗与寻址错误</td>
+            <td><strong>Observer Effect</strong> — 主观观测如何扭曲物理真实：感知即现实的边界</td>
+            <td><strong>10册</strong></td>
+            <td>1999 - 2001</td>
+          </tr>
+          <tr>
+            <td class="series-shiki">
+              <span class="series-tag tag-shiki">四季</span>
+              <div class="series-name">四季系列</div>
+              <div class="series-sub">真贺田四季</div>
+            </td>
+            <td>《四季 春》《四季 夏》《四季 秋》《四季 冬》</td>
+            <td><code>Kernel Source</code> 系统内核源码、<code>Lifecycle Management</code> 生命周期管理、<code>State Persistence</code> 状态持久化</td>
+            <td><strong>Compiler Theory</strong> — 天才的操作系统是如何编译的：意识如何从源码编译为可执行体</td>
+            <td><strong>4册</strong></td>
+            <td>2005 - 2009</td>
+          </tr>
+          <tr>
+            <td class="series-g">
+              <span class="series-tag tag-g">G</span>
+              <div class="series-name">G系列</div>
+              <div class="series-sub">希腊字母系列</div>
+            </td>
+            <td>《φは壊れたね》《θは遊んでくれたよ》《τになるまで待って》《εに誓って》等</td>
+            <td><code>Graph Theory</code> 图论、<code>Probability & Statistics</code> 概率论与统计学、<code>GNN Thinking</code> 图神经网络思维</td>
+            <td><strong>Node or Edge</strong> — 个体是图中的节点还是连接线：关系才是本体</td>
+            <td><strong>11册</strong></td>
+            <td>2004 - 2018</td>
+          </tr>
+          <tr>
+            <td class="series-x">
+              <span class="series-tag tag-x">X</span>
+              <div class="series-name">X系列</div>
+              <div class="series-sub">结构工程系列</div>
+            </td>
+            <td>《イナイ×イナイ》《キラレ×キラレ》《タカイ×タカイ》等</td>
+            <td><code>Structural Engineering</code> 结构工程、<code>Reverse Engineering</code> 逆向工程、<code>Legacy Code</code> 遗留代码维护</td>
+            <td><strong>Technical Debt</strong> — 维护旧架构比新建更难：历史包袱的重量</td>
+            <td><strong>6册</strong></td>
+            <td>2007 - 2009</td>
+          </tr>
+          <tr>
+            <td class="series-century">
+              <span class="series-tag tag-century">百年</span>
+              <div class="series-name">百年系列</div>
+              <div class="series-sub">永生与停滞</div>
+            </td>
+            <td>《女王の百年密室》《迷宮百年の睡魔》《红绿黑白》</td>
+            <td><code>Data Persistence</code> 数据持久化、<code>Cache Stale</code> 缓存过期、<code>System Stagnation</code> 系统停滞</td>
+            <td><strong>Immortality Paradox</strong> — 永生是否等同于停滞：不死的代价是不再变化</td>
+            <td><strong>3册</strong></td>
+            <td>2006 - 2009</td>
+          </tr>
+          <tr>
+            <td class="series-sky">
+              <span class="series-tag tag-sky">空中杀手</span>
+              <div class="series-name">空中杀手系列</div>
+              <div class="series-sub">Sky Crawlers</div>
+            </td>
+            <td>《スカイ・クロラ》《ナ・バ・テア》《ダウン・ツ・ヘヴン》《フラッタ・リンツ・ライフ》等</td>
+            <td><code>Recursion & Base Case</code> 递归函数与基准情形、<code>FSM</code> 状态机、<code>Infinite Loop</code> 无限循环</td>
+            <td><strong>Termination Problem</strong> — 如果没有终点，过程是否有意义：无限循环的虚无</td>
+            <td><strong>6册</strong></td>
+            <td>2002 - 2006</td>
+          </tr>
+          <tr>
+            <td class="series-w">
+              <span class="series-tag tag-w">W</span>
+              <div class="series-name">W系列</div>
+              <div class="series-sub">沃克隆 Walk-alone</div>
+            </td>
+            <td>《彼女は一人で歩くのか？》《魔法の色を知っているか？》《デボラ、眠っているのか？》《私たちは生きているのか？》等</td>
+            <td><code>Black-box Fitting</code> 黑盒拟合、<code>Artificial Life</code> 人工生命体、<code>Consciousness Virtualization</code> 意识虚拟化</td>
+            <td><strong>Turing Test 2.0</strong> — 人工生命与人类的边界在哪里：定义「人」的不可能性</td>
+            <td><strong>10册</strong></td>
+            <td>2015 - 2019</td>
+          </tr>
+          <tr>
+            <td class="series-ww">
+              <span class="series-tag tag-ww">WW</span>
+              <div class="series-name">WW系列</div>
+              <div class="series-sub">分布式意识</div>
+            </td>
+            <td>《それでもデミアンは一人なのか？》《誰がゴーストを作ったのか？》《また二人になったのか？》等</td>
+            <td><code>Distributed Consciousness</code> 分布式意识、<code>Decentralization</code> 去中心化、<code>Global Emergence</code> 全局涌现</td>
+            <td><strong>Identity Consensus</strong> — 意识的分布式存储是否还是同一个人：自我的一致性协议</td>
+            <td><strong>8+册</strong></td>
+            <td>2019 - 2024 (连载中)</td>
+          </tr>
+          <tr>
+            <td class="series-void">
+              <span class="series-tag tag-void">Void Shaper</span>
+              <div class="series-name">Void Shaper系列</div>
+              <div class="series-sub">虚空塑形者</div>
+            </td>
+            <td>《ヴォイド・シェイパ》《ブラッド・スクーパ》《スカル・ブレーカ》《マインド・クァンチャ》《フォグ・ハイダ》</td>
+            <td><code>Introspection Algorithm</code> 内省算法、<code>Human Nature Exploration</code> 人性探求</td>
+            <td><strong>Bushido Philosophy</strong> — 武士修行中的哲学思考：通过剑术修行抵达自我认知</td>
+            <td><strong>5册</strong></td>
+            <td>2019 - 2022</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 2: 系统演进路线 -->
+  <div id="evolution" class="tab-content">
+    <div class="phase-grid">
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-num tag-v">PHASE 1</span>
+          <span class="phase-title">逻辑的感知</span>
+          <span class="phase-subtitle">Perception Layer · 前传</span>
+        </div>
+        <div class="phase-content">
+          V系列探索<strong>观测与认知的边界</strong>——在真正的逻辑推理之前，我们首先需要感知世界。瀬在丸紅子通过知觉心理学与模式识别，揭示了<strong>人类感知系统的局限性</strong>：我们看到的世界，已经被大脑预处理过。
+        </div>
+        <div class="phase-series">
+          <span class="series-badge tag-v">V系列 1999-2001</span>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-num tag-sm">PHASE 2</span>
+          <span class="phase-title">逻辑的突破</span>
+          <span class="phase-subtitle">Logic Core · 核心</span>
+        </div>
+        <div class="phase-content">
+          S&M系列是森博嗣宇宙的<strong>逻辑内核</strong>——犀川創平与西之園萌絵通过10个案件，对「理性能否完全解释世界」进行<code>Unit Testing</code>。每一个密室都是一个<strong>沙盒环境</strong>，每一次推理都是对逻辑边界的压力测试。真贺田四季在此登场，成为整个系统的<strong>Root User</strong>。
+        </div>
+        <div class="phase-series">
+          <span class="series-badge tag-sm">S&M系列 1996-1998</span>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-num tag-shiki">PHASE 3</span>
+          <span class="phase-title">内核源码</span>
+          <span class="phase-subtitle">Kernel Source · 系统内核</span>
+        </div>
+        <div class="phase-content">
+          四季系列是整个森博嗣宇宙的<strong>内核源码</strong>——从「春」到「冬」，完整展示了真贺田四季这个<strong>操作系统是如何被编译的</strong>。童年的异常、成长的算法优化、成年后的系统架构设计，直至最终的<code>State Persistence</code>——意识如何跨越载体持久化存储。
+        </div>
+        <div class="phase-series">
+          <span class="series-badge tag-shiki">四季系列 2005-2009</span>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-num tag-g">PHASE 4</span>
+          <span class="phase-title">逻辑的社会化</span>
+          <span class="phase-subtitle">Network Layer · 演进</span>
+        </div>
+        <div class="phase-content">
+          G系列与X系列将逻辑推理从<strong>单点扩展到网络</strong>。G系列通过<code>Graph Theory</code>探索「个体是节点还是边」的本体论问题；X系列则面对<strong>技术债务</strong>——如何在不破坏现有系统的前提下进行架构演进，<code>Legacy Code</code>的维护比重写更难。
+        </div>
+        <div class="phase-series">
+          <span class="series-badge tag-g">G系列 2004-2018</span>
+          <span class="series-badge tag-x">X系列 2007-2009</span>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-num tag-sky">PHASE 5</span>
+          <span class="phase-title">递归与循环</span>
+          <span class="phase-subtitle">Infinite Loop · 分支</span>
+        </div>
+        <div class="phase-content">
+          空中杀手系列是森博嗣宇宙的<strong>平行分支</strong>——Kildren们永远无法长大，被困在战争的<code>Infinite Loop</code>中。这是对<strong>递归函数缺少基准情形</strong>的哲学隐喻：如果没有终止条件，程序会永远运行下去，但这种运行是否有意义？<strong>过程本身是否就是目的？</strong>
+        </div>
+        <div class="phase-series">
+          <span class="series-badge tag-sky">空中杀手系列 2002-2006</span>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-header">
+          <span class="phase-num tag-ww">PHASE 6</span>
+          <span class="phase-title">终局</span>
+          <span class="phase-subtitle">Distributed Consensus · 逻辑的永恒与虚无</span>
+        </div>
+        <div class="phase-content">
+          百年系列、W系列、WW系列构成森博嗣宇宙的<strong>终局篇章</strong>。百年系列探索<code>Data Persistence</code>——永生意味着什么？W系列引入沃克隆，模糊人与AI的边界；WW系列则进入<strong>分布式意识</strong>时代，探索当「我」被分布在多个节点时，<code>Identity Consensus</code>如何达成。<strong>意识上云后，孤独是否被消解，还是被无限放大？</strong>
+        </div>
+        <div class="phase-series">
+          <span class="series-badge tag-century">百年系列 2006-2009</span>
+          <span class="series-badge tag-w">W系列 2015-2019</span>
+          <span class="series-badge tag-ww">WW系列 2019-2024</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: S&M系列 P0级异常排查表 -->
+  <div id="sm-detail" class="tab-content">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:6%">卷号</th>
+            <th style="width:14%">书名</th>
+            <th style="width:26%">线上事故 / 系统Bug隐喻</th>
+            <th style="width:27%">核心数理与算法逻辑</th>
+            <th style="width:27%">核心命题与哲学思辨</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="series-sm"><strong>Vol.1</strong></td>
+            <td><strong>全部成为F</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">The Perfect Insider</span></td>
+            <td><code>Sandbox Escape</code> 沙盒逃逸 — 四季被封闭在孤岛研究所的 chroot 监狱中，通过 Red Magic OS 的底层漏洞完成密室逃脱。系统无法自证其完备性，唯有从内部制造极端异常才能跳出闭环。</td>
+            <td><code>Integer Overflow</code> 整数溢出 — <code>0xFFFF</code> 计数器回绕触发 Fail-safe，"F"即十六进制最大值。<strong>哥德尔不完备定理</strong>：系统无法自证完备，必须获取外部观测者视角。</td>
+            <td><strong>自由与孤独</strong> — 一个不可被约简的意识，如何逃离为它量身定制的牢笼？绝对的天才必然绝对孤独。</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.2</strong></td>
+            <td><strong>冰冷密室与博士们</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">Doctors in Isolated Room</span></td>
+            <td><code>Concurrency Deadlock</code> 并发死锁 — 低温实验室的环境监控系统与门禁系统产生资源竞争，两个进程互相等待对方释放锁，形成死锁。物理层面的「冰冷」映射系统的完全停滞。</td>
+            <td><code>Mutex Lock</code> 互斥锁 — 经典的哲学家就餐问题变体。两个临界区资源（温度控制、门禁）的不当调度导致系统冻结。</td>
+            <td><strong>协作与竞争</strong> — 当多个理性主体争夺有限资源时，个体最优选择导致集体最差结果。博弈论的囚徒困境。</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.3</strong></td>
+            <td><strong>笑わない数学者</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">Mathematical Goodbye</span></td>
+            <td><code>Front-end Rendering Fraud</code> 前端渲染欺骗 — 魔术般的视觉诡计本质是前端UI与后端状态的不一致。用户看到的界面（消失的建筑）与服务器实际数据（建筑仍存在）产生分离。</td>
+            <td><code>View-Model Desync</code> 视图模型不同步 — 数学家利用人类视觉系统的预期模式，制造「看到」与「存在」的分离。费马大定理的证明与不证明。</td>
+            <td><strong>证明与存在</strong> — 数学家为何不笑？因为他知道「证明」只是一种社会契约，而「存在」是独立于证明的。真理不需要观众。</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.4</strong></td>
+            <td><strong>詩的私的ジャック</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">Jack the Poetical Private</span></td>
+            <td><code>Namespace Pollution</code> 命名空间污染 — 大学校园内多起事件的共同模式（浴室、诗句、杰克）造成调查方向的混淆。不同案件的变量名相互覆盖，难以追溯真正的调用栈。</td>
+            <td><code>Pattern Matching</code> 模式匹配 — 表面相似的模式（诗意的杀人仪式）掩盖了完全不同的底层逻辑。正则表达式的贪婪匹配导致误判。</td>
+            <td><strong>符号与意义</strong> — 诗是私人的，还是公共的？当符号被赋予过多意义时，它反而失去了所有意义。符号学的过度诠释。</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.5</strong></td>
+            <td><strong>封印再度</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">Who Inside</span></td>
+            <td><code>Cache Invalidation</code> 缓存失效 — 50年前的「封印」（旧数据）与当前事件产生冲突。系统使用了过期的缓存数据进行决策，导致逻辑错误。历史的封印并未真正失效。</td>
+            <td><code>TTL Misconfiguration</code> 生存时间配置错误 — 本应过期的数据（50年前的秘密）仍然影响当前系统运行。分布式系统中最难的问题之一。</td>
+            <td><strong>历史与当下</strong> — 被封印的过去是否真的过去了？每一个「再度」都是对「封印」有效性的质疑。历史是活着的幽灵。</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.6</strong></td>
+            <td><strong>幻惑の死と使途</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">Illusion Acts Like Magic</span></td>
+            <td><code>Session Hijacking</code> 会话劫持 — 魔术师的表演本质是对观众「注意力会话」的劫持。通过控制观众的注意力指针，将其重定向到错误的内存地址。</td>
+            <td><code>Attention Pointer Manipulation</code> 注意力指针操作 — 舞台魔术与系统攻击共享同一逻辑：控制观测者的观测点，而非改变被观测物。</td>
+            <td><strong>幻觉与现实</strong> — 如果幻觉足够完美，它与现实有何区别？使途（使者）传递的是信息还是幻象？</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.7</strong></td>
+            <td><strong>夏のレプリカ</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">Replaceable Summer</span></td>
+            <td><code>Object Cloning</code> 对象克隆 — 萌絵的过去与现在形成「副本」关系。两个时间点的萌絵是同一个对象的深拷贝还是浅拷贝？修改副本是否影响原件？</td>
+            <td><code>Deep Copy vs Shallow Copy</code> — 记忆的复制是否等同于自我的复制？如果所有属性都相同，两个实例是否等价？</td>
+            <td><strong>同一性与变化</strong> — 夏天的萌絵与现在的萌絵是同一个人吗？可替换意味着什么？忒修斯之船的心理学版本。</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.8</strong></td>
+            <td><strong>今はもうない</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">Switch Back</span></td>
+            <td><code>Git Revert</code> 版本回退 — 「现在已经不存在了」是对时间线的强制回滚。系统试图恢复到过去的某个 commit，但发现历史已被重写。</td>
+            <td><code>Time Complexity</code> 时间复杂度 — 回到过去的计算成本是多少？如果是 O(∞)，则「现在」是唯一可访问的状态。</td>
+            <td><strong>时间与存在</strong> — 「现在」为何「已经不存在」？每一个瞬间在诞生的同时就已消亡。时间是单向链表。</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.9</strong></td>
+            <td><strong>数奇にして模型</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">Numerical Models</span></td>
+            <td><code>Hash Collision</code> 哈希碰撞 — 模型（人偶）与真人的「哈希值」相同，导致系统无法区分。两个不同的输入产生相同的输出，身份验证失败。</td>
+            <td><code>Collision Attack</code> 碰撞攻击 — 精心构造的模型与真人在所有可观测属性上产生相同的哈希，突破身份认证系统。</td>
+            <td><strong>模型与真实</strong> — 当模型精确到无法与原型区分时，谁是真实的？所有科学都是模型，那么真实在哪里？</td>
+          </tr>
+          <tr>
+            <td class="series-sm"><strong>Vol.10</strong></td>
+            <td><strong>有限と微小のパン</strong><br><span style="color:var(--text-dim);font-size:0.75rem;">The Perfect Outsider</span></td>
+            <td><code>Container Escape</code> 容器逃逸 — 从 Vol.1 的 Insider 到 Vol.10 的 Outsider，四季完成了从「容器内」到「容器外」的终极逃逸。VR与现实的边界被打破。</td>
+            <td><code>O(1) vs O(n)</code> — 「面包」代表有限的物理容器，而意识需要无限扩张。当内容超越容器时，容器必须被抛弃。</td>
+            <td><strong>有限与无限</strong> — 肉体（面包）是微小且有限的，而思想是无限的。Outsider = 跳出所有容器的观测者。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab 4: 犀川架构师演进路线 -->
+  <div id="saikawa" class="tab-content">
+    <div class="evolution-track">
+      <div class="evo-stage">
+        <div>
+          <div class="evo-label tag-sm">初期 Vol.1-3</div>
+        </div>
+        <div class="evo-content">
+          <h4>物理架构漏洞 — Hardware Bugs</h4>
+          <p>犀川在初期主要处理<strong>物理层面的系统漏洞</strong>：密室的物理结构（Vol.1 孤岛研究所）、环境控制系统的死锁（Vol.2 低温实验室）、视觉欺骗的物理实现（Vol.3 消失的建筑）。这一阶段的犀川像是一个<strong>硬件工程师</strong>，关注的是物理世界如何被利用来制造逻辑漏洞。他的推理依赖于对<strong>物理定律的精确理解</strong>——建筑结构、温度变化、光学原理。</p>
+        </div>
+      </div>
+
+      <div class="evo-stage">
+        <div>
+          <div class="evo-label tag-sm">中期 Vol.4-7</div>
+        </div>
+        <div class="evo-content">
+          <h4>数据流与传输协议 — Middleware 问题</h4>
+          <p>中期的犀川开始处理<strong>更抽象的中间件问题</strong>：符号系统的污染（Vol.4 诗的多义性）、历史数据的缓存失效（Vol.5 50年前的封印）、注意力的会话劫持（Vol.6 魔术表演）、记忆的对象克隆（Vol.7 萌絵的过去）。这一阶段他像是一个<strong>中间件架构师</strong>，关注的是<strong>数据如何在系统间流动、被存储、被解释</strong>。物理层面的理解不再足够，需要理解<strong>协议、编码、状态管理</strong>。</p>
+        </div>
+      </div>
+
+      <div class="evo-stage">
+        <div>
+          <div class="evo-label tag-sm">后期 Vol.8-10</div>
+        </div>
+        <div class="evo-content">
+          <h4>系统级哲学死锁 — 底层架构定义</h4>
+          <p>后期的犀川面对的是<strong>系统级的哲学问题</strong>：时间的不可逆性（Vol.8「现在已经不存在」）、身份的哈希碰撞（Vol.9 模型与真人）、存在本身的容器逃逸（Vol.10 有限与无限）。这一阶段他已经成为真正的<strong>系统架构师</strong>，思考的不再是具体的bug，而是<strong>系统设计的根本假设</strong>：什么是时间？什么是身份？什么是存在？当他在Vol.10再次面对四季时，他理解了——<strong>有些问题不是用来解决的，而是用来共存的</strong>。架构师的终极能力不是修复所有bug，而是<strong>理解哪些「bug」其实是「feature」</strong>。</p>
+        </div>
+      </div>
+
+      <div class="evo-stage">
+        <div>
+          <div class="evo-label" style="background:rgba(167,139,250,0.15);color:var(--g);border:1px solid rgba(167,139,250,0.3);">演进总结</div>
+        </div>
+        <div class="evo-content">
+          <h4>从 Debug 到 Design — 架构师的觉醒</h4>
+          <p>犀川的演进轨迹映射了一个工程师的成长路径：从<strong>硬件层面的问题排查</strong>，到<strong>中间件的数据流分析</strong>，最终到达<strong>系统哲学的架构思考</strong>。他与真贺田四季的关系，本质上是<code>User</code>与<code>Root</code>的关系——用户永远无法完全理解系统设计者的意图，但可以通过使用系统来逐渐接近那个意图。<strong>S&M系列的结局不是犀川「解决」了四季，而是他「理解」了四季</strong>——理解她为何这样设计这个系统，以及为何这个系统必须被超越。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer">森博嗣 · 全系架构图谱 — 从逻辑的单元测试到意识的分布式存储</p>
+</div>
+
+<script>
+function showTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
