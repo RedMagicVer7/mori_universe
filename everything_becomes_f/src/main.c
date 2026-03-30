@@ -19,6 +19,7 @@ static void on_phase_change(EverythingBecomesFRuntime *runtime,
                             Phase old_phase, Phase new_phase,
                             void *context) {
     (void)runtime;
+    (void)old_phase;
     (void)context;
     
     const PhaseInfo *info = get_phase_info(new_phase);

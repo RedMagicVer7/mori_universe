@@ -218,15 +218,77 @@
   }
   .phase-card {
     background: var(--bg-card);
-    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 2rem;
     transition: all 0.3s ease;
+    position: relative;
+    border: none;
+  }
+  .phase-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 2px;
+    background: linear-gradient(135deg, #E5E7EB, #D1D5DB);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+  /* Phase 01 - 青绿渐变 */
+  .phase-card.phase-01::before {
+    background: linear-gradient(135deg, #2dd4bf, #14b8a6, #0d9488);
+  }
+  /* Phase 02 - 蓝紫渐变 */
+  .phase-card.phase-02::before {
+    background: linear-gradient(135deg, #818cf8, #6366f1, #4f46e5);
+  }
+  /* Phase 03 - 粉紫渐变 */
+  .phase-card.phase-03::before {
+    background: linear-gradient(135deg, #f472b6, #ec4899, #db2777);
+  }
+  /* Phase 04 - 橙金渐变 */
+  .phase-card.phase-04::before {
+    background: linear-gradient(135deg, #fb923c, #f97316, #ea580c);
+  }
+  /* Phase 05 - 红色渐变 */
+  .phase-card.phase-05::before {
+    background: linear-gradient(135deg, #f87171, #ef4444, #dc2626);
+  }
+  /* Phase 06 - 蓝色渐变 */
+  .phase-card.phase-06::before {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6, #2563eb);
   }
   .phase-card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 8px 30px rgba(123, 63, 228, 0.08);
+    box-shadow: 0 8px 30px rgba(123, 63, 228, 0.12);
     transform: translateY(-2px);
+  }
+  /* Phase 标签渐变背景 */
+  .phase-num.phase-num-01 {
+    background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+    color: white;
+  }
+  .phase-num.phase-num-02 {
+    background: linear-gradient(135deg, #818cf8, #6366f1);
+    color: white;
+  }
+  .phase-num.phase-num-03 {
+    background: linear-gradient(135deg, #f472b6, #ec4899);
+    color: white;
+  }
+  .phase-num.phase-num-04 {
+    background: linear-gradient(135deg, #fb923c, #f97316);
+    color: white;
+  }
+  .phase-num.phase-num-05 {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    color: white;
+  }
+  .phase-num.phase-num-06 {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    color: white;
   }
   .phase-header {
     display: flex;
@@ -437,7 +499,7 @@
 
 <div class="container">
   <header class="header">
-    <span class="section-number">0x00 · MORI UNIVERSE</span>
+    <span class="section-number">0x07 · MORI UNIVERSE</span>
     <h1 data-zh="森博嗣 · 全系架构与数理逻辑图谱" data-en="Mori Hiroshi · Universe Architecture & Mathematical Logic Map" data-ja="森博嗣 · 全系アーキテクチャと数理論理マップ">森博嗣 · 全系架构与数理逻辑图谱</h1>
     <p class="subtitle" data-zh="Mori Hiroshi — Universe System Architecture & Mathematical Logic Map" data-en="Mori Hiroshi — Universe System Architecture & Mathematical Logic Map" data-ja="森博嗣 — 宇宙システムアーキテクチャと数理論理マップ">Mori Hiroshi — Universe System Architecture & Mathematical Logic Map</p>
   </header>
@@ -592,9 +654,9 @@
   <!-- Tab 2: 系统演进路线 -->
   <div id="evolution" class="tab-content">
     <div class="phase-grid">
-      <div class="phase-card">
+      <div class="phase-card phase-01">
         <div class="phase-header">
-          <span class="phase-num tag-v">PHASE 01</span>
+          <span class="phase-num phase-num-01">PHASE 01</span>
           <span class="phase-title" data-zh="逻辑的感知" data-en="Logic Perception" data-ja="論理の感知">逻辑的感知</span>
           <span class="phase-subtitle" data-zh="Perception Layer · 前传" data-en="Perception Layer · Prequel" data-ja="知覚レイヤー · 前章">Perception Layer · 前传</span>
         </div>
@@ -606,9 +668,9 @@
         </div>
       </div>
 
-      <div class="phase-card">
+      <div class="phase-card phase-02">
         <div class="phase-header">
-          <span class="phase-num tag-sm">PHASE 02</span>
+          <span class="phase-num phase-num-02">PHASE 02</span>
           <span class="phase-title" data-zh="逻辑的突破" data-en="Logic Breakthrough" data-ja="論理の突破">逻辑的突破</span>
           <span class="phase-subtitle" data-zh="Logic Core · 核心" data-en="Logic Core · Core" data-ja="ロジックコア · コア">Logic Core · 核心</span>
         </div>
@@ -620,9 +682,9 @@
         </div>
       </div>
 
-      <div class="phase-card">
+      <div class="phase-card phase-03">
         <div class="phase-header">
-          <span class="phase-num tag-shiki">PHASE 03</span>
+          <span class="phase-num phase-num-03">PHASE 03</span>
           <span class="phase-title" data-zh="内核源码" data-en="Kernel Source" data-ja="カーネルソース">内核源码</span>
           <span class="phase-subtitle" data-zh="Kernel Source · 系统内核" data-en="Kernel Source · System Kernel" data-ja="カーネルソース · システムカーネル">Kernel Source · 系统内核</span>
         </div>
@@ -634,9 +696,9 @@
         </div>
       </div>
 
-      <div class="phase-card">
+      <div class="phase-card phase-04">
         <div class="phase-header">
-          <span class="phase-num tag-g">PHASE 04</span>
+          <span class="phase-num phase-num-04">PHASE 04</span>
           <span class="phase-title" data-zh="逻辑的社会化" data-en="Logic Socialization" data-ja="論理の社会化">逻辑的社会化</span>
           <span class="phase-subtitle" data-zh="Network Layer · 演进" data-en="Network Layer · Evolution" data-ja="ネットワークレイヤー · 進化">Network Layer · 演进</span>
         </div>
@@ -649,9 +711,9 @@
         </div>
       </div>
 
-      <div class="phase-card">
+      <div class="phase-card phase-05">
         <div class="phase-header">
-          <span class="phase-num tag-sky">PHASE 05</span>
+          <span class="phase-num phase-num-05">PHASE 05</span>
           <span class="phase-title" data-zh="递归与循环" data-en="Recursion & Loop" data-ja="再帰とループ">递归与循环</span>
           <span class="phase-subtitle" data-zh="Infinite Loop · 分支" data-en="Infinite Loop · Branch" data-ja="無限ループ · ブランチ">Infinite Loop · 分支</span>
         </div>
@@ -663,9 +725,9 @@
         </div>
       </div>
 
-      <div class="phase-card">
+      <div class="phase-card phase-06">
         <div class="phase-header">
-          <span class="phase-num tag-ww">PHASE 06</span>
+          <span class="phase-num phase-num-06">PHASE 06</span>
           <span class="phase-title" data-zh="终局" data-en="Endgame" data-ja="終局">终局</span>
           <span class="phase-subtitle" data-zh="Distributed Consensus · 逻辑的永恒与虚无" data-en="Distributed Consensus · Logic's Eternity & Void" data-ja="分散コンセンサス · 論理の永遠と虚無">Distributed Consensus · 逻辑的永恒与虚无</span>
         </div>
