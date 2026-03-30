@@ -277,9 +277,39 @@
     .episode { padding: 1rem 1.1rem; }
     .episode::before { left: -1.55rem; }
   }
+  .screenshot-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #38bdf8;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'SF Pro Text', 'Noto Sans SC', sans-serif;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .screenshot-btn:hover {
+    background: rgba(56, 189, 248, 0.25);
+    border-color: rgba(56, 189, 248, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+  }
+  .screenshot-btn:active {
+    transform: translateY(0);
+  }
+  @media print {
+    .screenshot-btn { display: none !important; }
+  }
 </style>
 </head>
 <body>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片">📸 保存为图片</button>
 <div class="container">
 
   <h1>《全部成为F》 · 运行时日志</h1>
