@@ -272,19 +272,51 @@
   @media print {
     .screenshot-btn { display: none !important; }
   }
+  .lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 160px;
+    z-index: 9999;
+    display: flex;
+    gap: 4px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 8px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'SF Pro Text', 'Noto Sans SC', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .lang-btn:hover { color: #e2e8f0; background: rgba(56, 189, 248, 0.1); }
+  .lang-btn.active { color: #38bdf8; background: rgba(56, 189, 248, 0.15); }
+  @media print { .lang-switcher { display: none !important; } }
 </style>
 </head>
 <body>
-<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片">📸 保存为图片</button>
+<div class="lang-switcher">
+  <button class="lang-btn" onclick="switchLang('zh')" data-lang="zh">中文</button>
+  <button class="lang-btn" onclick="switchLang('en')" data-lang="en">EN</button>
+  <button class="lang-btn" onclick="switchLang('ja')" data-lang="ja">日本語</button>
+</div>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片"><span data-zh="📸 保存为图片" data-en="📸 Save as Image" data-ja="📸 画像として保存">📸 保存为图片</span></button>
 <div class="container">
-  <h1>森博嗣 · 全系架构与数理逻辑图谱</h1>
+  <h1 data-zh="森博嗣 · 全系架构与数理逻辑图谱" data-en="Mori Hiroshi · Universe Architecture & Mathematical Logic Map" data-ja="森博嗣 · 全系アーキテクチャと数理論理マップ">森博嗣 · 全系架构与数理逻辑图谱</h1>
   <p class="subtitle">Mori Hiroshi — Universe System Architecture & Mathematical Logic Map</p>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('overview')">全系架构总览</button>
-    <button class="tab-btn" onclick="showTab('evolution')">系统演进路线</button>
-    <button class="tab-btn" onclick="showTab('sm-detail')">S&M系列 P0级异常排查表</button>
-    <button class="tab-btn" onclick="showTab('saikawa')">犀川架构师演进路线</button>
+    <button class="tab-btn active" onclick="showTab('overview')" data-zh="全系架构总览" data-en="Universe Overview" data-ja="全系アーキテクチャ概要">全系架构总览</button>
+    <button class="tab-btn" onclick="showTab('evolution')" data-zh="系统演进路线" data-en="System Evolution" data-ja="システム進化経路">系统演进路线</button>
+    <button class="tab-btn" onclick="showTab('sm-detail')" data-zh="S&M系列 P0级异常排查表" data-en="S&M Series P0 Bug Investigation" data-ja="S&Mシリーズ P0異常調査表">S&M系列 P0级异常排查表</button>
+    <button class="tab-btn" onclick="showTab('saikawa')" data-zh="犀川架构师演进路线" data-en="Saikawa Architect Evolution" data-ja="犀川アーキテクト進化経路">犀川架构师演进路线</button>
   </div>
 
   <!-- Tab 1: 全系架构总览 -->
@@ -293,12 +325,12 @@
       <table>
         <thead>
           <tr>
-            <th style="width:14%">系列名称</th>
-            <th style="width:18%">核心书目</th>
-            <th style="width:22%">核心数理/编程/AI 原理</th>
-            <th style="width:22%">核心哲学命题</th>
-            <th style="width:8%">册数</th>
-            <th style="width:16%">时间跨度</th>
+            <th style="width:14%" data-zh="系列名称" data-en="Series Name" data-ja="シリーズ名">系列名称</th>
+            <th style="width:18%" data-zh="核心书目" data-en="Core Works" data-ja="主要作品">核心书目</th>
+            <th style="width:22%" data-zh="核心数理/编程/AI 原理" data-en="Core Math/Programming/AI Principles" data-ja="核心数理/プログラミング/AI原理">核心数理/编程/AI 原理</th>
+            <th style="width:22%" data-zh="核心哲学命题" data-en="Core Philosophical Proposition" data-ja="核心哲学命題">核心哲学命题</th>
+            <th style="width:8%" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</th>
+            <th style="width:16%" data-zh="时间跨度" data-en="Time Span" data-ja="期間">时间跨度</th>
           </tr>
         </thead>
         <tbody>
@@ -525,11 +557,11 @@
       <table>
         <thead>
           <tr>
-            <th style="width:6%">卷号</th>
-            <th style="width:14%">书名</th>
-            <th style="width:26%">线上事故 / 系统Bug隐喻</th>
-            <th style="width:27%">核心数理与算法逻辑</th>
-            <th style="width:27%">核心命题与哲学思辨</th>
+            <th style="width:6%" data-zh="卷号" data-en="Vol." data-ja="巻">卷号</th>
+            <th style="width:14%" data-zh="书名" data-en="Title" data-ja="書名">书名</th>
+            <th style="width:26%" data-zh="线上事故 / 系统Bug隐喻" data-en="System Bug Metaphor" data-ja="システムバグ隠喩">线上事故 / 系统Bug隐喻</th>
+            <th style="width:27%" data-zh="核心数理与算法逻辑" data-en="Core Math & Algorithm Logic" data-ja="核心数理とアルゴリズム論理">核心数理与算法逻辑</th>
+            <th style="width:27%" data-zh="核心命题与哲学思辨" data-en="Core Proposition & Philosophy" data-ja="核心命題と哲学思考">核心命题与哲学思辨</th>
           </tr>
         </thead>
         <tbody>
@@ -653,10 +685,33 @@
     </div>
   </div>
 
-  <p class="footer">森博嗣 · 全系架构图谱 — 从逻辑的单元测试到意识的分布式存储</p>
+  <p class="footer" data-zh="森博嗣 · 全系架构图谱 — 从逻辑的单元测试到意识的分布式存储" data-en="Mori Hiroshi · Universe Architecture — From Logic Unit Testing to Distributed Consciousness Storage" data-ja="森博嗣 · 全系アーキテクチャ図譜 — 論理のユニットテストから意識の分散ストレージまで">森博嗣 · 全系架构图谱 — 从逻辑的单元测试到意识的分布式存储</p>
 </div>
 
 <script>
+function switchLang(lang) {
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+        el.textContent = el.getAttribute('data-' + lang);
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    localStorage.setItem('mori-lang', lang);
+}
+
+function detectLang() {
+    const saved = localStorage.getItem('mori-lang');
+    if (saved) return saved;
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang.startsWith('ja')) return 'ja';
+    if (browserLang.startsWith('zh')) return 'zh';
+    return 'en';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchLang(detectLang());
+});
+
 function showTab(tabId) {
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));

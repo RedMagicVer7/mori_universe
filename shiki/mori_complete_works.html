@@ -337,13 +337,45 @@
   @media print {
     .screenshot-btn { display: none !important; }
   }
+  .lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 160px;
+    z-index: 9999;
+    display: flex;
+    gap: 4px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 8px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'SF Pro Text', 'Noto Sans SC', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .lang-btn:hover { color: #e2e8f0; background: rgba(56, 189, 248, 0.1); }
+  .lang-btn.active { color: #38bdf8; background: rgba(56, 189, 248, 0.15); }
+  @media print { .lang-switcher { display: none !important; } }
 </style>
 </head>
 <body>
-<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片">📸 保存为图片</button>
+<div class="lang-switcher">
+  <button class="lang-btn" onclick="switchLang('zh')" data-lang="zh">中文</button>
+  <button class="lang-btn" onclick="switchLang('en')" data-lang="en">EN</button>
+  <button class="lang-btn" onclick="switchLang('ja')" data-lang="ja">日本語</button>
+</div>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片"><span data-zh="📸 保存为图片" data-en="📸 Save as Image" data-ja="📸 画像として保存">📸 保存为图片</span></button>
 <div class="container">
 
-  <h1>森博嗣 · 作品全集</h1>
+  <h1 data-zh="森博嗣 · 作品全集" data-en="Mori Hiroshi · Complete Works" data-ja="森博嗣 · 作品全集">森博嗣 · 作品全集</h1>
   <p class="subtitle">Mori Hiroshi — Complete Works Collection</p>
 
   <!-- Tab Navigation -->
@@ -645,32 +677,56 @@
 
   <!-- Footer Statistics -->
   <div class="footer-stats">
-    <div class="stats-title">创作统计 — Statistics</div>
+    <div class="stats-title" data-zh="创作统计 — Statistics" data-en="Creation Statistics" data-ja="創作統計">创作统计 — Statistics</div>
     <div class="stats-grid">
       <div class="stat-item">
         <div class="stat-num">10</div>
-        <div class="stat-label">总系列数</div>
+        <div class="stat-label" data-zh="总系列数" data-en="Total Series" data-ja="総シリーズ数">总系列数</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">73+</div>
-        <div class="stat-label">总作品数</div>
+        <div class="stat-label" data-zh="总作品数" data-en="Total Works" data-ja="総作品数">总作品数</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">28+</div>
-        <div class="stat-label">创作年数</div>
+        <div class="stat-label" data-zh="创作年数" data-en="Years of Writing" data-ja="創作年数">创作年数</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">1996–2024</div>
-        <div class="stat-label">WW系列 <span class="ongoing">连载中</span></div>
+        <div class="stat-label">WW系列 <span class="ongoing" data-zh="连载中" data-en="Ongoing" data-ja="連載中">连载中</span></div>
       </div>
     </div>
   </div>
 
-  <p class="footer">森博嗣 · Mori Hiroshi — 日本推理小说家、工学博士</p>
+  <p class="footer" data-zh="森博嗣 · Mori Hiroshi — 日本推理小说家、工学博士" data-en="Mori Hiroshi — Japanese Mystery Writer & Doctor of Engineering" data-ja="森博嗣 — 日本推理小説家・工学博士">森博嗣 · Mori Hiroshi — 日本推理小说家、工学博士</p>
 
 </div>
 
 <script>
+  // Language switching logic
+  function switchLang(lang) {
+      document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+          el.textContent = el.getAttribute('data-' + lang);
+      });
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      localStorage.setItem('mori-lang', lang);
+  }
+
+  function detectLang() {
+      const saved = localStorage.getItem('mori-lang');
+      if (saved) return saved;
+      const browserLang = navigator.language || navigator.userLanguage;
+      if (browserLang.startsWith('ja')) return 'ja';
+      if (browserLang.startsWith('zh')) return 'zh';
+      return 'en';
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+      switchLang(detectLang());
+  });
+
   // Tab switching logic
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {

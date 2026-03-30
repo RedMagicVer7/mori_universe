@@ -306,20 +306,52 @@
   @media print {
     .screenshot-btn { display: none !important; }
   }
+  .lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 160px;
+    z-index: 9999;
+    display: flex;
+    gap: 4px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 8px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'SF Pro Text', 'Noto Sans SC', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .lang-btn:hover { color: #e2e8f0; background: rgba(56, 189, 248, 0.1); }
+  .lang-btn.active { color: #38bdf8; background: rgba(56, 189, 248, 0.15); }
+  @media print { .lang-switcher { display: none !important; } }
 </style>
 </head>
 <body>
-<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片">📸 保存为图片</button>
+<div class="lang-switcher">
+  <button class="lang-btn" onclick="switchLang('zh')" data-lang="zh">中文</button>
+  <button class="lang-btn" onclick="switchLang('en')" data-lang="en">EN</button>
+  <button class="lang-btn" onclick="switchLang('ja')" data-lang="ja">日本語</button>
+</div>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片"><span data-zh="📸 保存为图片" data-en="📸 Save as Image" data-ja="📸 画像として保存">📸 保存为图片</span></button>
 <div class="container">
 
-  <h1>《全部成为F》 · 运行时日志</h1>
+  <h1 data-zh="《全部成为F》 · 运行时日志" data-en="The Perfect Insider · Runtime Log" data-ja="『すべてがFになる』 · ランタイムログ">《全部成为F》 · 运行时日志</h1>
   <p class="subtitle">すべてがFになる &mdash; Runtime Log &middot; State Machine Trace &middot; <code>exit(0xF)</code></p>
 
   <!-- ═══════════════════════════════════════ Phase 1 ═══════════════════════════════════════ -->
   <div class="phase-group">
     <div class="phase-header">
       <span class="phase-num ph-init">PHASE 1</span>
-      <span class="phase-title">系统的"冷启动"与环境检查</span>
+      <span class="phase-title" data-zh="系统的"冷启动"与环境检查" data-en="System Cold Boot & Environment Probe" data-ja="システムの「コールドブート」と環境チェック">系统的"冷启动"与环境检查</span>
       <span class="phase-title-en">Cold Boot &amp; Environment Probe</span>
     </div>
 
@@ -361,7 +393,7 @@
   <div class="phase-group">
     <div class="phase-header">
       <span class="phase-num ph-kern">PHASE 2</span>
-      <span class="phase-title">访问控制与核心内核</span>
+      <span class="phase-title" data-zh="访问控制与核心内核" data-en="Access Control & Kernel" data-ja="アクセス制御とコアカーネル">访问控制与核心内核</span>
       <span class="phase-title-en">Access Control &amp; Kernel</span>
     </div>
 
@@ -402,7 +434,7 @@
   <div class="phase-group">
     <div class="phase-header">
       <span class="phase-num ph-io">PHASE 3</span>
-      <span class="phase-title">I/O 交互与边界测试</span>
+      <span class="phase-title" data-zh="I/O 交互与边界测试" data-en="I/O Stream & Boundary Testing" data-ja="I/O 交互と境界テスト">I/O 交互与边界测试</span>
       <span class="phase-title-en">I/O Stream &amp; Boundary Testing</span>
     </div>
 
@@ -459,7 +491,7 @@
   <div class="phase-group">
     <div class="phase-header">
       <span class="phase-num ph-mem">PHASE 4</span>
-      <span class="phase-title">递归调用与内存寻址</span>
+      <span class="phase-title" data-zh="递归调用与内存寻址" data-en="Recursive Call & Memory Addressing" data-ja="再帰呼び出しとメモリアドレッシング">递归调用与内存寻址</span>
       <span class="phase-title-en">Recursive Call &amp; Memory Addressing</span>
     </div>
 
@@ -502,7 +534,7 @@
   <div class="phase-group">
     <div class="phase-header">
       <span class="phase-num ph-exit">PHASE 5</span>
-      <span class="phase-title">逻辑爆炸与系统停机</span>
+      <span class="phase-title" data-zh="逻辑爆炸与系统停机" data-en="Logic Explosion & System Shutdown" data-ja="ロジック爆発とシステムシャットダウン">逻辑爆炸与系统停机</span>
       <span class="phase-title-en">Logic Explosion &amp; System Shutdown</span>
     </div>
 
@@ -545,12 +577,35 @@
   <div class="footer">
     森博嗣 &middot; すべてがFになる &middot; The Perfect Insider<br>
     <code>init()</code> → <code>sandbox()</code> → <code>kernel()</code> → <code>io_test()</code> → <code>mem_dump()</code> → <code>deadlock()</code> → <code>return 0xF;</code><br>
-    一个完整的算法执行流程图 &mdash; 从冷启动到缓冲区溢出的全生命周期
+    <span data-zh="一个完整的算法执行流程图 — 从冷启动到缓冲区溢出的全生命周期" data-en="A complete algorithm execution flow — From cold boot to buffer overflow lifecycle" data-ja="完全なアルゴリズム実行フロー図 — コールドブートからバッファオーバーフローまでのライフサイクル">一个完整的算法执行流程图 &mdash; 从冷启动到缓冲区溢出的全生命周期</span>
   </div>
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+function switchLang(lang) {
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+        el.textContent = el.getAttribute('data-' + lang);
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    localStorage.setItem('mori-lang', lang);
+}
+
+function detectLang() {
+    const saved = localStorage.getItem('mori-lang');
+    if (saved) return saved;
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang.startsWith('ja')) return 'ja';
+    if (browserLang.startsWith('zh')) return 'zh';
+    return 'en';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchLang(detectLang());
+});
+
 function capturePageAsImage() {
     const btn = document.querySelector('.screenshot-btn');
     const originalText = btn.textContent;

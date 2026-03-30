@@ -495,22 +495,70 @@
     .screenshot-btn { top: 12px; right: 12px; padding: 0.5rem 1rem; font-size: 0.8rem; }
   }
 
+  /* Language Switcher */
+  .lang-switcher {
+    position: fixed;
+    top: 24px;
+    right: 180px;
+    z-index: 9999;
+    display: flex;
+    gap: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 4px;
+    box-shadow: var(--shadow-md);
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  .lang-btn:hover {
+    color: var(--text-primary);
+    background: var(--primary-light);
+  }
+  .lang-btn.active {
+    background: var(--primary);
+    color: white;
+  }
+  @media (max-width: 768px) {
+    .lang-switcher {
+      right: auto;
+      left: 12px;
+      top: 12px;
+    }
+  }
+
   @media print {
     .screenshot-btn { display: none !important; }
+    .lang-switcher { display: none !important; }
     body::before { display: none; }
   }
 </style>
 </head>
 <body>
-<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片">📸 保存为图片</button>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片" data-zh="📸 保存为图片" data-en="📸 Save as Image" data-ja="📸 画像として保存">📸 保存为图片</button>
+<div class="lang-switcher">
+    <button class="lang-btn active" onclick="switchLang('zh')" data-lang="zh">中文</button>
+    <button class="lang-btn" onclick="switchLang('en')" data-lang="en">EN</button>
+    <button class="lang-btn" onclick="switchLang('ja')" data-lang="ja">日本語</button>
+</div>
 
 <div class="container">
 
   <!-- Header -->
   <header class="header">
     <div class="header-tag">0x4D4F5249 · COMPLETE_WORKS</div>
-    <h1>森博嗣 · 作品全集</h1>
-    <p class="subtitle">Mori Hiroshi — Complete Works Collection</p>
+    <h1 data-zh="森博嗣 · 作品全集" data-en="Mori Hiroshi · Complete Works" data-ja="森博嗣 · 全作品集">森博嗣 · 作品全集</h1>
+    <p class="subtitle" data-zh="Mori Hiroshi — Complete Works Collection" data-en="Mori Hiroshi — Complete Works Collection" data-ja="森博嗣 — 全作品コレクション">Mori Hiroshi — Complete Works Collection</p>
   </header>
 
   <!-- Tab Navigation -->
@@ -533,23 +581,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x01</div>
-          <div class="series-title">S&M系列（犀川&萌绘）</div>
-          <div class="series-subtitle">Saikawa & Moe Series → 理学部推理剧</div>
+          <div class="series-title" data-zh="S&M系列（犀川&萌绘）" data-en="S&M Series (Saikawa & Moe)" data-ja="S&Mシリーズ（犀川＆萌絵）">S&M系列（犀川&萌绘）</div>
+          <div class="series-subtitle" data-zh="Saikawa & Moe Series → 理学部推理剧" data-en="Saikawa & Moe Series → Science Faculty Mystery" data-ja="犀川＆萌絵シリーズ → 理学部ミステリ">Saikawa & Moe Series → 理学部推理剧</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">主角</span><span class="meta-value">犀川创平 & 西之園萌绘</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">1996-1998</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">10册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="主角" data-en="Protagonist" data-ja="主人公">主角</span><span class="meta-value" data-zh="犀川创平 & 西之園萌绘" data-en="Saikawa Sohei & Nishinosono Moe" data-ja="犀川創平 ＆ 西之園萌絵">犀川创平 & 西之園萌绘</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">1996-1998</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="10册" data-en="10 Volumes" data-ja="10巻">10册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">逻辑</span><span class="tag">密室</span><span class="tag">天才</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="逻辑" data-en="Logic" data-ja="論理">逻辑</span><span class="tag" data-zh="密室" data-en="Locked Room" data-ja="密室">密室</span><span class="tag" data-zh="天才" data-en="Genius" data-ja="天才">天才</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>英文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="英文名" data-en="English Title" data-ja="英語タイトル">英文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">すべてがFになる</td><td class="en-name">The Perfect Insider</td><td class="cn-name">全部成为F</td><td class="year">1996</td></tr>
           <tr><td class="num">02</td><td class="jp-name">冷たい密室と博士たち</td><td class="en-name">Doctors in Isolated Room</td><td class="cn-name">冰冷密室与博士们</td><td class="year">1996</td></tr>
@@ -572,23 +620,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x02</div>
-          <div class="series-title">V系列（瀬在丸紅子）</div>
-          <div class="series-subtitle">Vシリーズ → 自由奔放的女侦探</div>
+          <div class="series-title" data-zh="V系列（瀬在丸紅子）" data-en="V Series (Sezamaru Beniko)" data-ja="Vシリーズ（瀬在丸紅子）">V系列（瀬在丸紅子）</div>
+          <div class="series-subtitle" data-zh="Vシリーズ → 自由奔放的女侦探" data-en="V Series → Free-spirited Detective" data-ja="Vシリーズ → 自由奔放な女探偵">Vシリーズ → 自由奔放的女侦探</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">主角</span><span class="meta-value">保呂草润平 & 瀬在丸紅子</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">1999-2001</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">10册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="主角" data-en="Protagonist" data-ja="主人公">主角</span><span class="meta-value" data-zh="保呂草润平 & 瀬在丸紅子" data-en="Horokusa Junpei & Sezamaru Beniko" data-ja="保呂草潤平 ＆ 瀬在丸紅子">保呂草润平 & 瀬在丸紅子</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">1999-2001</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="10册" data-en="10 Volumes" data-ja="10巻">10册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">盗贼</span><span class="tag">变装</span><span class="tag">诡计</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="盗贼" data-en="Thief" data-ja="盗賊">盗贼</span><span class="tag" data-zh="变装" data-en="Disguise" data-ja="変装">变装</span><span class="tag" data-zh="诡计" data-en="Trick" data-ja="トリック">诡计</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">黒猫の三角</td><td class="cn-name">黑猫的三角</td><td class="year">1999</td></tr>
           <tr><td class="num">02</td><td class="jp-name">人形式モナリザ</td><td class="cn-name">人偶式蒙娜丽莎</td><td class="year">1999</td></tr>
@@ -611,23 +659,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x03</div>
-          <div class="series-title">四季系列</div>
-          <div class="series-subtitle">四季シリーズ → 真贺田四季的一生</div>
+          <div class="series-title" data-zh="四季系列" data-en="Shiki Series" data-ja="四季シリーズ">四季系列</div>
+          <div class="series-subtitle" data-zh="四季シリーズ → 真贺田四季的一生" data-en="Shiki Series → Life of Magata Shiki" data-ja="四季シリーズ → 真賀田四季の一生">四季シリーズ → 真贺田四季的一生</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">主角</span><span class="meta-value">真贺田四季</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2005-2009</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">4册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="主角" data-en="Protagonist" data-ja="主人公">主角</span><span class="meta-value" data-zh="真贺田四季" data-en="Magata Shiki" data-ja="真賀田四季">真贺田四季</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">2005-2009</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="4册" data-en="4 Volumes" data-ja="4巻">4册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">天才</span><span class="tag">成长</span><span class="tag">超越</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="天才" data-en="Genius" data-ja="天才">天才</span><span class="tag" data-zh="成长" data-en="Growth" data-ja="成長">成长</span><span class="tag" data-zh="超越" data-en="Transcendence" data-ja="超越">超越</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">四季 春</td><td class="cn-name">四季·春</td><td class="year">2005</td></tr>
           <tr><td class="num">02</td><td class="jp-name">四季 夏</td><td class="cn-name">四季·夏</td><td class="year">2006</td></tr>
@@ -644,23 +692,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x04</div>
-          <div class="series-title">G系列（希腊字母）</div>
-          <div class="series-subtitle">Gシリーズ → Greek Alphabet Series</div>
+          <div class="series-title" data-zh="G系列（希腊字母）" data-en="G Series (Greek Alphabet)" data-ja="Gシリーズ（ギリシャ文字）">G系列（希腊字母）</div>
+          <div class="series-subtitle" data-zh="Gシリーズ → Greek Alphabet Series" data-en="G Series → Greek Alphabet Series" data-ja="Gシリーズ → ギリシャ文字シリーズ">Gシリーズ → Greek Alphabet Series</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">主角群</span><span class="meta-value">加部谷恵美、山吹早月 等</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2004-2018</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">11册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="主角群" data-en="Main Cast" data-ja="主人公グループ">主角群</span><span class="meta-value" data-zh="加部谷恵美、山吹早月 等" data-en="Kabutoya Emi, Yamabuki Satsuki, etc." data-ja="加部谷恵美、山吹早月 等">加部谷恵美、山吹早月 等</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">2004-2018</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="11册" data-en="11 Volumes" data-ja="11巻">11册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">符号</span><span class="tag">群像</span><span class="tag">谜题</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="符号" data-en="Symbol" data-ja="記号">符号</span><span class="tag" data-zh="群像" data-en="Ensemble" data-ja="群像">群像</span><span class="tag" data-zh="谜题" data-en="Puzzle" data-ja="パズル">谜题</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">φは壊れたね</td><td class="cn-name">φ坏了</td><td class="year">2004</td></tr>
           <tr><td class="num">02</td><td class="jp-name">θは遊んでくれたよ</td><td class="cn-name">θ陪我玩过</td><td class="year">2005</td></tr>
@@ -684,23 +732,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x05</div>
-          <div class="series-title">X系列</div>
-          <div class="series-subtitle">Xシリーズ → 重复的标记</div>
+          <div class="series-title" data-zh="X系列" data-en="X Series" data-ja="Xシリーズ">X系列</div>
+          <div class="series-subtitle" data-zh="Xシリーズ → 重复的标记" data-en="X Series → Repeated Marks" data-ja="Xシリーズ → 繰り返しの印">Xシリーズ → 重复的标记</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">主角</span><span class="meta-value">小川令子</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2007-2009</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">6册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="主角" data-en="Protagonist" data-ja="主人公">主角</span><span class="meta-value" data-zh="小川令子" data-en="Ogawa Reiko" data-ja="小川令子">小川令子</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">2007-2009</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="6册" data-en="6 Volumes" data-ja="6巻">6册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">双重</span><span class="tag">反复</span><span class="tag">标记</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="双重" data-en="Double" data-ja="二重">双重</span><span class="tag" data-zh="反复" data-en="Repetition" data-ja="反復">反复</span><span class="tag" data-zh="标记" data-en="Mark" data-ja="マーク">标记</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">イナイ×イナイ</td><td class="cn-name">没有×没有</td><td class="year">2007</td></tr>
           <tr><td class="num">02</td><td class="jp-name">キラレ×キラレ</td><td class="cn-name">闪耀×闪耀</td><td class="year">2008</td></tr>
@@ -719,23 +767,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x06</div>
-          <div class="series-title">百年系列</div>
-          <div class="series-subtitle">百年シリーズ → 遥远未来的密室</div>
+          <div class="series-title" data-zh="百年系列" data-en="Century Series" data-ja="百年シリーズ">百年系列</div>
+          <div class="series-subtitle" data-zh="百年シリーズ → 遥远未来的密室" data-en="Century Series → Locked Rooms of the Distant Future" data-ja="百年シリーズ → 遠い未来の密室">百年シリーズ → 遥远未来的密室</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">未来世界</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2006-2009</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">3册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="设定" data-en="Setting" data-ja="設定">设定</span><span class="meta-value" data-zh="未来世界" data-en="Future World" data-ja="未来世界">未来世界</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">2006-2009</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="3册" data-en="3 Volumes" data-ja="3巻">3册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">未来</span><span class="tag">王国</span><span class="tag">永生</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="未来" data-en="Future" data-ja="未来">未来</span><span class="tag" data-zh="王国" data-en="Kingdom" data-ja="王国">王国</span><span class="tag" data-zh="永生" data-en="Immortality" data-ja="不死">永生</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">女王の百年密室</td><td class="cn-name">女王的百年密室</td><td class="year">2006</td></tr>
           <tr><td class="num">02</td><td class="jp-name">百年の子守唄</td><td class="cn-name">百年摇篮曲</td><td class="year">2007</td></tr>
@@ -751,23 +799,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x07</div>
-          <div class="series-title">空中杀手系列</div>
-          <div class="series-subtitle">スカイ・クロラ → Sky Crawlers Series</div>
+          <div class="series-title" data-zh="空中杀手系列" data-en="Sky Crawlers Series" data-ja="スカイ・クロラシリーズ">空中杀手系列</div>
+          <div class="series-subtitle" data-zh="スカイ・クロラ → Sky Crawlers Series" data-en="Sky Crawlers → Eternal Pilots" data-ja="スカイ・クロラ → 永遠の戦闘機乗り">スカイ・クロラ → Sky Crawlers Series</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">永恒战争的天空</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2002-2006</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">6册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="设定" data-en="Setting" data-ja="設定">设定</span><span class="meta-value" data-zh="永恒战争的天空" data-en="Eternal War in the Sky" data-ja="永遠の戦争の空">永恒战争的天空</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">2002-2006</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="6册" data-en="6 Volumes" data-ja="6巻">6册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">战斗</span><span class="tag">不死</span><span class="tag">青春</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="战斗" data-en="Combat" data-ja="戦闘">战斗</span><span class="tag" data-zh="不死" data-en="Immortality" data-ja="不死">不死</span><span class="tag" data-zh="青春" data-en="Youth" data-ja="青春">青春</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>英文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="英文名" data-en="English Title" data-ja="英語タイトル">英文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">スカイ・クロラ</td><td class="en-name">The Sky Crawlers</td><td class="cn-name">空中杀手</td><td class="year">2002</td></tr>
           <tr><td class="num">02</td><td class="jp-name">ナ・バ・テア</td><td class="en-name">None But Air</td><td class="cn-name">无他之外</td><td class="year">2003</td></tr>
@@ -786,23 +834,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x08</div>
-          <div class="series-title">W系列（沃克隆）</div>
-          <div class="series-subtitle">Wシリーズ → Walkalone Series</div>
+          <div class="series-title" data-zh="W系列（沃克隆）" data-en="W Series (Walkalone)" data-ja="Wシリーズ（ウォーカロン）">W系列（沃克隆）</div>
+          <div class="series-subtitle" data-zh="Wシリーズ → Walkalone Series" data-en="W Series → Walkalone Series" data-ja="Wシリーズ → ウォーカロンシリーズ">Wシリーズ → Walkalone Series</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">人工生命体的未来</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2015-2019</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">10册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="设定" data-en="Setting" data-ja="設定">设定</span><span class="meta-value" data-zh="人工生命体的未来" data-en="Future of Artificial Life" data-ja="人工生命体の未来">人工生命体的未来</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">2015-2019</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="10册" data-en="10 Volumes" data-ja="10巻">10册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">AI</span><span class="tag">意识</span><span class="tag">存在</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag">AI</span><span class="tag" data-zh="意识" data-en="Consciousness" data-ja="意識">意识</span><span class="tag" data-zh="存在" data-en="Existence" data-ja="存在">存在</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">彼女は一人で歩くのか？</td><td class="cn-name">她独自步行吗？</td><td class="year">2015</td></tr>
           <tr><td class="num">02</td><td class="jp-name">魔法の色を知っているか？</td><td class="cn-name">你知道魔法的颜色吗？</td><td class="year">2015</td></tr>
@@ -825,23 +873,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x09</div>
-          <div class="series-title">WW系列</div>
-          <div class="series-subtitle">WWシリーズ → 连载中</div>
+          <div class="series-title" data-zh="WW系列" data-en="WW Series" data-ja="WWシリーズ">WW系列</div>
+          <div class="series-subtitle" data-zh="WWシリーズ → 连载中" data-en="WW Series → Ongoing" data-ja="WWシリーズ → 連載中">WWシリーズ → 连载中</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">W系列续篇</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2019-2024</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">8+册 <span class="ongoing-badge">连载中</span></span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="设定" data-en="Setting" data-ja="設定">设定</span><span class="meta-value" data-zh="W系列续篇" data-en="W Series Sequel" data-ja="Wシリーズ続編">W系列续篇</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">2019-2024</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value">8+册 <span class="ongoing-badge" data-zh="连载中" data-en="Ongoing" data-ja="連載中">连载中</span></span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">进化</span><span class="tag">幽灵</span><span class="tag">意识</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="进化" data-en="Evolution" data-ja="進化">进化</span><span class="tag" data-zh="幽灵" data-en="Ghost" data-ja="幽霊">幽灵</span><span class="tag" data-zh="意识" data-en="Consciousness" data-ja="意識">意识</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">それでもデミアンは一人なのか？</td><td class="cn-name">德米安还是一个人吗？</td><td class="year">2019</td></tr>
           <tr><td class="num">02</td><td class="jp-name">神はいつ問われるのか？</td><td class="cn-name">何时会追问上帝？</td><td class="year">2020</td></tr>
@@ -862,23 +910,23 @@
       <div class="series-header">
         <div class="series-title-wrap">
           <div class="series-id">SERIES_0x0A</div>
-          <div class="series-title">Void Shaper系列</div>
-          <div class="series-subtitle">ヴォイド・シェイパ → 剑与空</div>
+          <div class="series-title" data-zh="Void Shaper系列" data-en="Void Shaper Series" data-ja="ヴォイド・シェイパシリーズ">Void Shaper系列</div>
+          <div class="series-subtitle" data-zh="ヴォイド・シェイパ → 剑与空" data-en="Void Shaper → Sword and Void" data-ja="ヴォイド・シェイパ → 剣と虚空">ヴォイド・シェイパ → 剑与空</div>
         </div>
       </div>
       <div class="series-meta">
-        <div class="meta-item"><span class="meta-label">设定</span><span class="meta-value">日本时代剧</span></div>
-        <div class="meta-item"><span class="meta-label">出版年份</span><span class="meta-value">2019-2022</span></div>
-        <div class="meta-item"><span class="meta-label">册数</span><span class="meta-value">5册</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="设定" data-en="Setting" data-ja="設定">设定</span><span class="meta-value" data-zh="日本时代剧" data-en="Japanese Period Drama" data-ja="日本時代劇">日本时代剧</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="出版年份" data-en="Published" data-ja="出版年">出版年份</span><span class="meta-value">2019-2022</span></div>
+        <div class="meta-item"><span class="meta-label" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</span><span class="meta-value" data-zh="5册" data-en="5 Volumes" data-ja="5巻">5册</span></div>
         <div class="meta-item">
-          <span class="meta-label">核心主题</span>
-          <div class="meta-tags"><span class="tag">剑道</span><span class="tag">虚空</span><span class="tag">修行</span></div>
+          <span class="meta-label" data-zh="核心主题" data-en="Core Themes" data-ja="核心テーマ">核心主题</span>
+          <div class="meta-tags"><span class="tag" data-zh="剑道" data-en="Swordsmanship" data-ja="剣道">剑道</span><span class="tag" data-zh="虚空" data-en="Void" data-ja="虚空">虚空</span><span class="tag" data-zh="修行" data-en="Training" data-ja="修行">修行</span></div>
         </div>
       </div>
     </div>
     <div class="table-wrapper">
       <table>
-        <thead><tr><th>#</th><th>日文名</th><th>中文名</th><th>出版年</th></tr></thead>
+        <thead><tr><th>#</th><th data-zh="日文名" data-en="Japanese Title" data-ja="日本語タイトル">日文名</th><th data-zh="中文名" data-en="Chinese Title" data-ja="中国語タイトル">中文名</th><th data-zh="出版年" data-en="Year" data-ja="出版年">出版年</th></tr></thead>
         <tbody>
           <tr><td class="num">01</td><td class="jp-name">ヴォイド・シェイパ</td><td class="cn-name">空隙成形者</td><td class="year">2019</td></tr>
           <tr><td class="num">02</td><td class="jp-name">マインド・クァンチャ</td><td class="cn-name">心灵淬火者</td><td class="year">2020</td></tr>
@@ -892,31 +940,31 @@
 
   <!-- Footer Statistics -->
   <section class="stats-section">
-    <div class="stats-title">→ 创作统计 / Statistics</div>
+    <div class="stats-title" data-zh="→ 创作统计 / Statistics" data-en="→ Statistics" data-ja="→ 創作統計 / Statistics">→ 创作统计 / Statistics</div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-num">10</div>
-        <div class="stat-label">总系列数</div>
+        <div class="stat-label" data-zh="总系列数" data-en="Total Series" data-ja="シリーズ数">总系列数</div>
       </div>
       <div class="stat-card">
         <div class="stat-num">73+</div>
-        <div class="stat-label">总作品数</div>
+        <div class="stat-label" data-zh="总作品数" data-en="Total Works" data-ja="総作品数">总作品数</div>
       </div>
       <div class="stat-card">
         <div class="stat-num">28+</div>
-        <div class="stat-label">创作年数</div>
+        <div class="stat-label" data-zh="创作年数" data-en="Years Active" data-ja="創作年数">创作年数</div>
       </div>
       <div class="stat-card">
         <div class="stat-num">1996–2024</div>
-        <div class="stat-label">创作跨度</div>
-        <div class="ongoing-badge">WW系列连载中</div>
+        <div class="stat-label" data-zh="创作跨度" data-en="Creative Span" data-ja="創作期間">创作跨度</div>
+        <div class="ongoing-badge" data-zh="WW系列连载中" data-en="WW Series Ongoing" data-ja="WWシリーズ連載中">WW系列连载中</div>
       </div>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="footer">
-    <p class="footer-text">森博嗣 · Mori Hiroshi — 日本推理小说家、工学博士</p>
+    <p class="footer-text" data-zh="森博嗣 · Mori Hiroshi — 日本推理小说家、工学博士" data-en="Mori Hiroshi — Japanese Mystery Novelist, Doctor of Engineering" data-ja="森博嗣 — 日本の推理小説家、工学博士">森博嗣 · Mori Hiroshi — 日本推理小说家、工学博士</p>
     <p class="footer-brand">Built for Web3 · Mori Universe</p>
   </footer>
 
@@ -932,6 +980,42 @@
       const tabId = 'tab-' + btn.dataset.tab;
       document.getElementById(tabId).classList.add('active');
     });
+  });
+
+  // Language switching functionality
+  function switchLang(lang) {
+      document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+          const text = el.getAttribute('data-' + lang);
+          if (text) {
+              if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                  el.placeholder = text;
+              } else {
+                  el.textContent = text;
+              }
+          }
+      });
+      // Update button active state
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      // Update html lang attribute
+      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : (lang === 'ja' ? 'ja' : 'en');
+      localStorage.setItem('mori-lang', lang);
+  }
+
+  // Auto-detect browser language
+  function detectLang() {
+      const saved = localStorage.getItem('mori-lang');
+      if (saved) return saved;
+      const browserLang = navigator.language || navigator.userLanguage;
+      if (browserLang.startsWith('ja')) return 'ja';
+      if (browserLang.startsWith('zh')) return 'zh';
+      return 'en';
+  }
+
+  // Apply language on page load
+  document.addEventListener('DOMContentLoaded', () => {
+      switchLang(detectLang());
   });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>

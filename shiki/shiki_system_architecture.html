@@ -386,25 +386,57 @@
   @media print {
     .screenshot-btn { display: none !important; }
   }
+  .lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 160px;
+    z-index: 9999;
+    display: flex;
+    gap: 4px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 8px;
+    padding: 4px;
+    backdrop-filter: blur(8px);
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'SF Pro Text', 'Noto Sans SC', sans-serif;
+    transition: all 0.2s ease;
+  }
+  .lang-btn:hover { color: #e2e8f0; background: rgba(56, 189, 248, 0.1); }
+  .lang-btn.active { color: #38bdf8; background: rgba(56, 189, 248, 0.15); }
+  @media print { .lang-switcher { display: none !important; } }
 </style>
 </head>
 <body>
-<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片">📸 保存为图片</button>
+<div class="lang-switcher">
+  <button class="lang-btn" onclick="switchLang('zh')" data-lang="zh">中文</button>
+  <button class="lang-btn" onclick="switchLang('en')" data-lang="en">EN</button>
+  <button class="lang-btn" onclick="switchLang('ja')" data-lang="ja">日本語</button>
+</div>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片"><span data-zh="📸 保存为图片" data-en="📸 Save as Image" data-ja="📸 画像として保存">📸 保存为图片</span></button>
 <div class="container">
 
-  <h1>真贺田四季 · 系统架构演进全景</h1>
-  <p class="subtitle">Magata Shiki — System Architecture Evolution Map</p>
+  <h1 data-zh="真贺田四季 · 系统架构演进全景" data-en="Magata Shiki · System Architecture Evolution Panorama" data-ja="真賀田四季 · システムアーキテクチャ進化全景">真贺田四季 · 系统架构演进全景</h1>
+  <p class="subtitle" data-zh="Magata Shiki — System Architecture Evolution Map" data-en="Magata Shiki — System Architecture Evolution Map" data-ja="Magata Shiki — System Architecture Evolution Map">Magata Shiki — System Architecture Evolution Map</p>
 
   <div class="table-wrapper">
     <table>
       <thead>
         <tr>
-          <th>架构演进阶段</th>
-          <th>核心书目</th>
-          <th>系统与网络隐喻</th>
-          <th>核心定理与逻辑证明</th>
-          <th>AI 技术映射</th>
-          <th>架构演进结果</th>
+          <th data-zh="架构演进阶段" data-en="Architecture Phase" data-ja="アーキテクチャ進化段階">架构演进阶段</th>
+          <th data-zh="核心书目" data-en="Core Works" data-ja="主要作品">核心书目</th>
+          <th data-zh="系统与网络隐喻" data-en="System & Network Metaphor" data-ja="システム・ネットワーク比喩">系统与网络隐喻</th>
+          <th data-zh="核心定理与逻辑证明" data-en="Core Theorems & Logical Proofs" data-ja="核心定理と論理証明">核心定理与逻辑证明</th>
+          <th data-zh="AI 技术映射" data-en="AI Technology Mapping" data-ja="AI技術マッピング">AI 技术映射</th>
+          <th data-zh="架构演进结果" data-en="Architecture Evolution Result" data-ja="アーキテクチャ進化結果">架构演进结果</th>
         </tr>
       </thead>
       <tbody>
@@ -414,7 +446,7 @@
           <td>
             <div class="phase">
               <span class="phase-tag">Phase 1</span>
-              <span class="phase-title">内核溢出与单机逃逸</span>
+              <span class="phase-title" data-zh="内核溢出与单机逃逸" data-en="Kernel Overflow & Standalone Escape" data-ja="カーネルオーバーフローとスタンドアロン脱出">内核溢出与单机逃逸</span>
               <span class="phase-sub">Sandbox · Kernel Panic</span>
             </div>
           </td>
@@ -469,7 +501,7 @@
           <td>
             <div class="phase">
               <span class="phase-tag">Phase 2</span>
-              <span class="phase-title">硬件冗余与集群高可用</span>
+              <span class="phase-title" data-zh="硬件冗余与集群高可用" data-en="Hardware Redundancy & High Availability" data-ja="ハードウェア冗長性と高可用性">硬件冗余与集群高可用</span>
               <span class="phase-sub">Active-Standby · HA 集群</span>
             </div>
           </td>
@@ -518,7 +550,7 @@
           <td>
             <div class="phase">
               <span class="phase-tag">Phase 3</span>
-              <span class="phase-title">算力解耦与彻底虚拟化</span>
+              <span class="phase-title" data-zh="算力解耦与彻底虚拟化" data-en="Computing Decoupling & Full Virtualization" data-ja="コンピューティング分離と完全仮想化">算力解耦与彻底虚拟化</span>
               <span class="phase-sub">Decoupling · 控制面/数据面分离</span>
             </div>
           </td>
@@ -569,7 +601,7 @@
           <td>
             <div class="phase">
               <span class="phase-tag">Phase 4</span>
-              <span class="phase-title">黑盒拟合与系统静默</span>
+              <span class="phase-title" data-zh="黑盒拟合与系统静默" data-en="Black-box Fitting & System Silence" data-ja="ブラックボックス適合とシステム静止">黑盒拟合与系统静默</span>
               <span class="phase-sub">Graceful Shutdown · Daemon</span>
             </div>
           </td>
@@ -630,7 +662,7 @@
           <td>
             <div class="phase">
               <span class="phase-tag">Phase 5</span>
-              <span class="phase-title">全局涌现与去中心化</span>
+              <span class="phase-title" data-zh="全局涌现与去中心化" data-en="Global Emergence & Decentralization" data-ja="グローバル創発と分散化">全局涌现与去中心化</span>
               <span class="phase-sub">Cloud Native · Stateless</span>
             </div>
           </td>
@@ -744,11 +776,34 @@
     </table>
   </div>
 
-  <p class="footer">森博嗣 · S&M / 独立作 / W シリーズ / WW シリーズ — 系统架构视角下的真贺田四季意识演化路径</p>
+  <p class="footer" data-zh="森博嗣 · S&M / 独立作 / W シリーズ / WW シリーズ — 系统架构视角下的真贺田四季意识演化路径" data-en="Mori Hiroshi · S&M / Standalone / W Series / WW Series — Magata Shiki's Consciousness Evolution from System Architecture Perspective" data-ja="森博嗣 · S&M / 独立作 / W シリーズ / WW シリーズ — システムアーキテクチャ視点の真賀田四季意識進化経路">森博嗣 · S&M / 独立作 / W シリーズ / WW シリーズ — 系统架构视角下的真贺田四季意识演化路径</p>
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+function switchLang(lang) {
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+        el.textContent = el.getAttribute('data-' + lang);
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    localStorage.setItem('mori-lang', lang);
+}
+
+function detectLang() {
+    const saved = localStorage.getItem('mori-lang');
+    if (saved) return saved;
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang.startsWith('ja')) return 'ja';
+    if (browserLang.startsWith('zh')) return 'zh';
+    return 'en';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchLang(detectLang());
+});
+
 function capturePageAsImage() {
     const btn = document.querySelector('.screenshot-btn');
     const originalText = btn.textContent;

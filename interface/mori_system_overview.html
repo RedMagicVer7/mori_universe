@@ -361,8 +361,50 @@
   .screenshot-btn:active {
     transform: translateY(0);
   }
+  /* Language Switcher */
+  .lang-switcher {
+    position: fixed;
+    top: 24px;
+    right: 160px;
+    z-index: 9999;
+    display: flex;
+    gap: 0;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  .lang-btn:hover {
+    color: var(--text-primary);
+    background: rgba(123, 63, 228, 0.05);
+  }
+  .lang-btn.active {
+    background: var(--primary);
+    color: white;
+  }
+  @media (max-width: 768px) {
+    .lang-switcher {
+      right: auto;
+      left: 12px;
+      top: 12px;
+    }
+  }
   @media print {
     .screenshot-btn { display: none !important; }
+    .lang-switcher { display: none !important; }
   }
   @media (max-width: 768px) {
     .container { padding: 1.5rem 1rem; }
@@ -386,20 +428,25 @@
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片">📸 保存为图片</button>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片" data-zh="📸 保存为图片" data-en="📸 Save as Image" data-ja="📸 画像として保存">📸 保存为图片</button>
+<div class="lang-switcher">
+    <button class="lang-btn active" onclick="switchLang('zh')" data-lang="zh">中文</button>
+    <button class="lang-btn" onclick="switchLang('en')" data-lang="en">EN</button>
+    <button class="lang-btn" onclick="switchLang('ja')" data-lang="ja">日本語</button>
+</div>
 
 <div class="container">
   <header class="header">
     <span class="section-number">0x00 · MORI UNIVERSE</span>
-    <h1>森博嗣 · 全系架构与数理逻辑图谱</h1>
-    <p class="subtitle">Mori Hiroshi — Universe System Architecture & Mathematical Logic Map</p>
+    <h1 data-zh="森博嗣 · 全系架构与数理逻辑图谱" data-en="Mori Hiroshi · Universe Architecture & Mathematical Logic Map" data-ja="森博嗣 · 全系アーキテクチャと数理論理マップ">森博嗣 · 全系架构与数理逻辑图谱</h1>
+    <p class="subtitle" data-zh="Mori Hiroshi — Universe System Architecture & Mathematical Logic Map" data-en="Mori Hiroshi — Universe System Architecture & Mathematical Logic Map" data-ja="森博嗣 — 宇宙システムアーキテクチャと数理論理マップ">Mori Hiroshi — Universe System Architecture & Mathematical Logic Map</p>
   </header>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('overview')">0x01 全系架构总览</button>
-    <button class="tab-btn" onclick="showTab('evolution')">0x02 系统演进路线</button>
-    <button class="tab-btn" onclick="showTab('sm-detail')">0x03 S&M异常排查表</button>
-    <button class="tab-btn" onclick="showTab('saikawa')">0x04 犀川演进路线</button>
+    <button class="tab-btn active" onclick="showTab('overview')" data-zh="0x01 全系架构总览" data-en="0x01 Architecture Overview" data-ja="0x01 全系アーキテクチャ概観">0x01 全系架构总览</button>
+    <button class="tab-btn" onclick="showTab('evolution')" data-zh="0x02 系统演进路线" data-en="0x02 Evolution Roadmap" data-ja="0x02 システム進化ロードマップ">0x02 系统演进路线</button>
+    <button class="tab-btn" onclick="showTab('sm-detail')" data-zh="0x03 S&M异常排查表" data-en="0x03 S&M Bug Report" data-ja="0x03 S&M異常調査表">0x03 S&M异常排查表</button>
+    <button class="tab-btn" onclick="showTab('saikawa')" data-zh="0x04 犀川演进路线" data-en="0x04 Saikawa Evolution" data-ja="0x04 犀川進化ルート">0x04 犀川演进路线</button>
   </div>
 
   <!-- Tab 1: 全系架构总览 -->
@@ -408,12 +455,12 @@
       <table>
         <thead>
           <tr>
-            <th style="width:14%">系列名称</th>
-            <th style="width:18%">核心书目</th>
-            <th style="width:22%">核心数理/编程/AI 原理</th>
-            <th style="width:22%">核心哲学命题</th>
-            <th style="width:8%">册数</th>
-            <th style="width:16%">时间跨度</th>
+            <th style="width:14%" data-zh="系列名称" data-en="Series" data-ja="シリーズ名">系列名称</th>
+            <th style="width:18%" data-zh="核心书目" data-en="Core Works" data-ja="主要作品">核心书目</th>
+            <th style="width:22%" data-zh="核心数理/编程/AI 原理" data-en="Core Math/CS/AI Principles" data-ja="数理・プログラミング・AI原理">核心数理/编程/AI 原理</th>
+            <th style="width:22%" data-zh="核心哲学命题" data-en="Core Philosophical Propositions" data-ja="哲学的命題">核心哲学命题</th>
+            <th style="width:8%" data-zh="册数" data-en="Volumes" data-ja="巻数">册数</th>
+            <th style="width:16%" data-zh="时间跨度" data-en="Time Span" data-ja="期間">时间跨度</th>
           </tr>
         </thead>
         <tbody>
@@ -548,10 +595,10 @@
       <div class="phase-card">
         <div class="phase-header">
           <span class="phase-num tag-v">PHASE 01</span>
-          <span class="phase-title">逻辑的感知</span>
-          <span class="phase-subtitle">Perception Layer · 前传</span>
+          <span class="phase-title" data-zh="逻辑的感知" data-en="Logic Perception" data-ja="論理の感知">逻辑的感知</span>
+          <span class="phase-subtitle" data-zh="Perception Layer · 前传" data-en="Perception Layer · Prequel" data-ja="知覚レイヤー · 前章">Perception Layer · 前传</span>
         </div>
-        <div class="phase-content">
+        <div class="phase-content" data-zh="V系列探索观测与认知的边界——在真正的逻辑推理之前，我们首先需要感知世界。瀬在丸紅子通过知觉心理学与模式识别，揭示了人类感知系统的局限性：我们看到的世界，已经被大脑预处理过。" data-en="The V Series explores the boundaries of observation and cognition—before true logical reasoning, we must first perceive the world. Sezamaru Beniko, through perceptual psychology and pattern recognition, reveals the limitations of human perception: the world we see has already been preprocessed by the brain." data-ja="Vシリーズは観測と認知の境界を探求する——真の論理的推論の前に、まず世界を感知する必要がある。瀬在丸紅子は知覚心理学とパターン認識を通じて、人間の知覚システムの限界を明らかにした：私たちが見る世界は、すでに脳によって前処理されている。">
           V系列探索<strong>观测与认知的边界</strong>——在真正的逻辑推理之前，我们首先需要感知世界。瀬在丸紅子通过知觉心理学与模式识别，揭示了<strong>人类感知系统的局限性</strong>：我们看到的世界，已经被大脑预处理过。
         </div>
         <div class="phase-series">
@@ -562,10 +609,10 @@
       <div class="phase-card">
         <div class="phase-header">
           <span class="phase-num tag-sm">PHASE 02</span>
-          <span class="phase-title">逻辑的突破</span>
-          <span class="phase-subtitle">Logic Core · 核心</span>
+          <span class="phase-title" data-zh="逻辑的突破" data-en="Logic Breakthrough" data-ja="論理の突破">逻辑的突破</span>
+          <span class="phase-subtitle" data-zh="Logic Core · 核心" data-en="Logic Core · Core" data-ja="ロジックコア · コア">Logic Core · 核心</span>
         </div>
-        <div class="phase-content">
+        <div class="phase-content" data-zh="S&M系列是森博嗣宇宙的逻辑内核——犀川創平与西之園萌絵通过10个案件，对「理性能否完全解释世界」进行Unit Testing。每一个密室都是一个沙盒环境，每一次推理都是对逻辑边界的压力测试。真贺田四季在此登场，成为整个系统的Root User。" data-en="The S&M Series is the logic core of the Mori universe—Saikawa Sohei and Nishinosono Moe, through 10 cases, perform Unit Testing on 'whether rationality can fully explain the world.' Each locked room is a sandbox environment, each deduction a stress test of logical boundaries. Magata Shiki appears here as the Root User of the entire system." data-ja="S&Mシリーズは森博嗣宇宙の論理コアである——犀川創平と西之園萌絵は10の事件を通じて「理性は世界を完全に説明できるか」をユニットテストする。各密室はサンドボックス環境であり、各推理は論理の境界へのストレステストである。真賀田四季がここでシステム全体のルートユーザーとして登場する。">
           S&M系列是森博嗣宇宙的<strong>逻辑内核</strong>——犀川創平与西之園萌絵通过10个案件，对「理性能否完全解释世界」进行<code>Unit Testing</code>。每一个密室都是一个<strong>沙盒环境</strong>，每一次推理都是对逻辑边界的压力测试。真贺田四季在此登场，成为整个系统的<strong>Root User</strong>。
         </div>
         <div class="phase-series">
@@ -576,10 +623,10 @@
       <div class="phase-card">
         <div class="phase-header">
           <span class="phase-num tag-shiki">PHASE 03</span>
-          <span class="phase-title">内核源码</span>
-          <span class="phase-subtitle">Kernel Source · 系统内核</span>
+          <span class="phase-title" data-zh="内核源码" data-en="Kernel Source" data-ja="カーネルソース">内核源码</span>
+          <span class="phase-subtitle" data-zh="Kernel Source · 系统内核" data-en="Kernel Source · System Kernel" data-ja="カーネルソース · システムカーネル">Kernel Source · 系统内核</span>
         </div>
-        <div class="phase-content">
+        <div class="phase-content" data-zh="四季系列是整个森博嗣宇宙的内核源码——从「春」到「冬」，完整展示了真贺田四季这个操作系统是如何被编译的。童年的异常、成长的算法优化、成年后的系统架构设计，直至最终的State Persistence——意识如何跨越载体持久化存储。" data-en="The Shiki Series is the kernel source code of the entire Mori universe—from 'Spring' to 'Winter,' it fully demonstrates how the operating system called Magata Shiki was compiled. Childhood anomalies, algorithmic optimization during growth, system architecture design in adulthood, and finally State Persistence—how consciousness persists across carriers." data-ja="四季シリーズは森博嗣宇宙全体のカーネルソースコードである——「春」から「冬」まで、真賀田四季というオペレーティングシステムがどのようにコンパイルされたかを完全に示す。幼少期の異常、成長期のアルゴリズム最適化、成人後のシステムアーキテクチャ設計、そして最終的なState Persistence——意識がキャリアを超えてどのように永続化されるか。">
           四季系列是整个森博嗣宇宙的<strong>内核源码</strong>——从「春」到「冬」，完整展示了真贺田四季这个<strong>操作系统是如何被编译的</strong>。童年的异常、成长的算法优化、成年后的系统架构设计，直至最终的<code>State Persistence</code>——意识如何跨越载体持久化存储。
         </div>
         <div class="phase-series">
@@ -590,10 +637,10 @@
       <div class="phase-card">
         <div class="phase-header">
           <span class="phase-num tag-g">PHASE 04</span>
-          <span class="phase-title">逻辑的社会化</span>
-          <span class="phase-subtitle">Network Layer · 演进</span>
+          <span class="phase-title" data-zh="逻辑的社会化" data-en="Logic Socialization" data-ja="論理の社会化">逻辑的社会化</span>
+          <span class="phase-subtitle" data-zh="Network Layer · 演进" data-en="Network Layer · Evolution" data-ja="ネットワークレイヤー · 進化">Network Layer · 演进</span>
         </div>
-        <div class="phase-content">
+        <div class="phase-content" data-zh="G系列与X系列将逻辑推理从单点扩展到网络。G系列通过Graph Theory探索「个体是节点还是边」的本体论问题；X系列则面对技术债务——如何在不破坏现有系统的前提下进行架构演进，Legacy Code的维护比重写更难。" data-en="The G and X Series extend logical reasoning from single points to networks. The G Series explores the ontological question of 'is an individual a node or an edge' through Graph Theory; the X Series faces technical debt—how to evolve architecture without breaking existing systems, maintaining Legacy Code is harder than rewriting." data-ja="GシリーズとXシリーズは論理推論を単一点からネットワークに拡張する。Gシリーズはグラフ理論を通じて「個体はノードかエッジか」という存在論的問題を探求し、Xシリーズは技術的負債に直面する——既存システムを壊さずにアーキテクチャを進化させる方法、レガシーコードの保守は書き直しより難しい。">
           G系列与X系列将逻辑推理从<strong>单点扩展到网络</strong>。G系列通过<code>Graph Theory</code>探索「个体是节点还是边」的本体论问题；X系列则面对<strong>技术债务</strong>——如何在不破坏现有系统的前提下进行架构演进，<code>Legacy Code</code>的维护比重写更难。
         </div>
         <div class="phase-series">
@@ -605,10 +652,10 @@
       <div class="phase-card">
         <div class="phase-header">
           <span class="phase-num tag-sky">PHASE 05</span>
-          <span class="phase-title">递归与循环</span>
-          <span class="phase-subtitle">Infinite Loop · 分支</span>
+          <span class="phase-title" data-zh="递归与循环" data-en="Recursion & Loop" data-ja="再帰とループ">递归与循环</span>
+          <span class="phase-subtitle" data-zh="Infinite Loop · 分支" data-en="Infinite Loop · Branch" data-ja="無限ループ · ブランチ">Infinite Loop · 分支</span>
         </div>
-        <div class="phase-content">
+        <div class="phase-content" data-zh="空中杀手系列是森博嗣宇宙的平行分支——Kildren们永远无法长大，被困在战争的Infinite Loop中。这是对递归函数缺少基准情形的哲学隐喻：如果没有终止条件，程序会永远运行下去，但这种运行是否有意义？过程本身是否就是目的？" data-en="The Sky Crawlers Series is a parallel branch of the Mori universe—the Kildren can never grow up, trapped in the Infinite Loop of war. This is a philosophical metaphor for recursion without a base case: if there's no termination condition, the program runs forever, but does such running have meaning? Is the process itself the purpose?" data-ja="空中杀手シリーズは森博嗣宇宙のパラレルブランチである——キルドレは永遠に成長できず、戦争のInfinite Loopに閉じ込められている。これは基底ケースのない再帰関数の哲学的隠喩である：終了条件がなければ、プログラムは永遠に実行し続けるが、そのような実行に意味はあるのか？プロセス自体が目的なのか？">
           空中杀手系列是森博嗣宇宙的<strong>平行分支</strong>——Kildren们永远无法长大，被困在战争的<code>Infinite Loop</code>中。这是对<strong>递归函数缺少基准情形</strong>的哲学隐喻：如果没有终止条件，程序会永远运行下去，但这种运行是否有意义？<strong>过程本身是否就是目的？</strong>
         </div>
         <div class="phase-series">
@@ -619,10 +666,10 @@
       <div class="phase-card">
         <div class="phase-header">
           <span class="phase-num tag-ww">PHASE 06</span>
-          <span class="phase-title">终局</span>
-          <span class="phase-subtitle">Distributed Consensus · 逻辑的永恒与虚无</span>
+          <span class="phase-title" data-zh="终局" data-en="Endgame" data-ja="終局">终局</span>
+          <span class="phase-subtitle" data-zh="Distributed Consensus · 逻辑的永恒与虚无" data-en="Distributed Consensus · Logic's Eternity & Void" data-ja="分散コンセンサス · 論理の永遠と虚無">Distributed Consensus · 逻辑的永恒与虚无</span>
         </div>
-        <div class="phase-content">
+        <div class="phase-content" data-zh="百年系列、W系列、WW系列构成森博嗣宇宙的终局篇章。百年系列探索Data Persistence——永生意味着什么？W系列引入沃克隆，模糊人与AI的边界；WW系列则进入分布式意识时代，探索当「我」被分布在多个节点时，Identity Consensus如何达成。意识上云后，孤独是否被消解，还是被无限放大？" data-en="The Century, W, and WW Series constitute the endgame of the Mori universe. The Century Series explores Data Persistence—what does immortality mean? The W Series introduces Walkalones, blurring the boundary between humans and AI; the WW Series enters the era of distributed consciousness, exploring how Identity Consensus is reached when 'I' is distributed across multiple nodes. After consciousness goes to the cloud, is loneliness dissolved or infinitely amplified?" data-ja="百年シリーズ、Wシリーズ、WWシリーズは森博嗣宇宙の終局篇を構成する。百年シリーズはData Persistence——不死は何を意味するか？WシリーズはWalkaloneを導入し、人間とAIの境界を曖昧にする；WWシリーズは分散意識時代に入り、「私」が複数のノードに分散されたとき、Identity Consensusがどのように達成されるかを探求する。意識がクラウドに上った後、孤独は解消されるのか、それとも無限に増幅されるのか？">
           百年系列、W系列、WW系列构成森博嗣宇宙的<strong>终局篇章</strong>。百年系列探索<code>Data Persistence</code>——永生意味着什么？W系列引入沃克隆，模糊人与AI的边界；WW系列则进入<strong>分布式意识</strong>时代，探索当「我」被分布在多个节点时，<code>Identity Consensus</code>如何达成。<strong>意识上云后，孤独是否被消解，还是被无限放大？</strong>
         </div>
         <div class="phase-series">
@@ -640,11 +687,11 @@
       <table>
         <thead>
           <tr>
-            <th style="width:6%">卷号</th>
-            <th style="width:14%">书名</th>
-            <th style="width:26%">线上事故 / 系统Bug隐喻</th>
-            <th style="width:27%">核心数理与算法逻辑</th>
-            <th style="width:27%">核心命题与哲学思辨</th>
+            <th style="width:6%" data-zh="卷号" data-en="Vol" data-ja="巻号">卷号</th>
+            <th style="width:14%" data-zh="书名" data-en="Title" data-ja="タイトル">书名</th>
+            <th style="width:26%" data-zh="线上事故 / 系统Bug隐喻" data-en="System Bug Metaphor" data-ja="システムバグの隠喩">线上事故 / 系统Bug隐喻</th>
+            <th style="width:27%" data-zh="核心数理与算法逻辑" data-en="Core Algorithm Logic" data-ja="アルゴリズムロジック">核心数理与算法逻辑</th>
+            <th style="width:27%" data-zh="核心命题与哲学思辨" data-en="Philosophical Speculation" data-ja="哲学的思弁">核心命题与哲学思辨</th>
           </tr>
         </thead>
         <tbody>
@@ -728,48 +775,48 @@
     <div class="evolution-track">
       <div class="evo-stage">
         <div>
-          <div class="evo-label tag-sm">初期 Vol.01-03</div>
+          <div class="evo-label tag-sm" data-zh="初期 Vol.01-03" data-en="Early Vol.01-03" data-ja="初期 Vol.01-03">初期 Vol.01-03</div>
         </div>
         <div class="evo-content">
-          <h4>物理架构漏洞 — Hardware Bugs</h4>
-          <p>犀川在初期主要处理<strong>物理层面的系统漏洞</strong>：密室的物理结构（Vol.1 孤岛研究所）、环境控制系统的死锁（Vol.2 低温实验室）、视觉欺骗的物理实现（Vol.3 消失的建筑）。这一阶段的犀川像是一个<strong>硬件工程师</strong>，关注的是物理世界如何被利用来制造逻辑漏洞。他的推理依赖于对<strong>物理定律的精确理解</strong>——建筑结构、温度变化、光学原理。</p>
+          <h4 data-zh="物理架构漏洞 — Hardware Bugs" data-en="Physical Architecture Bugs — Hardware Bugs" data-ja="物理アーキテクチャの脆弱性 — Hardware Bugs">物理架构漏洞 — Hardware Bugs</h4>
+          <p data-zh="犀川在初期主要处理物理层面的系统漏洞：密室的物理结构（Vol.1 孤岛研究所）、环境控制系统的死锁（Vol.2 低温实验室）、视觉欺骗的物理实现（Vol.3 消失的建筑）。这一阶段的犀川像是一个硬件工程师，关注的是物理世界如何被利用来制造逻辑漏洞。他的推理依赖于对物理定律的精确理解——建筑结构、温度变化、光学原理。" data-en="In the early phase, Saikawa mainly handles physical layer system vulnerabilities: the physical structure of locked rooms (Vol.1 Island Lab), deadlock in environment control systems (Vol.2 Cryogenic Lab), physical implementation of visual deception (Vol.3 Disappearing Building). At this stage, Saikawa is like a hardware engineer, focusing on how the physical world is exploited to create logical vulnerabilities. His reasoning relies on precise understanding of physical laws—building structure, temperature change, optical principles." data-ja="初期の犀川は主に物理層のシステム脆弱性を処理する：密室の物理構造（Vol.1 孤島研究所）、環境制御システムのデッドロック（Vol.2 低温実験室）、視覚的欺瞞の物理的実装（Vol.3 消える建物）。この段階の犀川はハードウェアエンジニアのようで、物理世界がどのように利用されて論理的脆弱性を生み出すかに注目している。彼の推理は物理法則の正確な理解に依存する——建築構造、温度変化、光学原理。">犀川在初期主要处理<strong>物理层面的系统漏洞</strong>：密室的物理结构（Vol.1 孤岛研究所）、环境控制系统的死锁（Vol.2 低温实验室）、视觉欺骗的物理实现（Vol.3 消失的建筑）。这一阶段的犀川像是一个<strong>硬件工程师</strong>，关注的是物理世界如何被利用来制造逻辑漏洞。他的推理依赖于对<strong>物理定律的精确理解</strong>——建筑结构、温度变化、光学原理。</p>
         </div>
       </div>
 
       <div class="evo-stage">
         <div>
-          <div class="evo-label tag-sm">中期 Vol.04-07</div>
+          <div class="evo-label tag-sm" data-zh="中期 Vol.04-07" data-en="Mid Vol.04-07" data-ja="中期 Vol.04-07">中期 Vol.04-07</div>
         </div>
         <div class="evo-content">
-          <h4>数据流与传输协议 — Middleware 问题</h4>
-          <p>中期的犀川开始处理<strong>更抽象的中间件问题</strong>：符号系统的污染（Vol.4 诗的多义性）、历史数据的缓存失效（Vol.5 50年前的封印）、注意力的会话劫持（Vol.6 魔术表演）、记忆的对象克隆（Vol.7 萌絵的过去）。这一阶段他像是一个<strong>中间件架构师</strong>，关注的是<strong>数据如何在系统间流动、被存储、被解释</strong>。物理层面的理解不再足够，需要理解<strong>协议、编码、状态管理</strong>。</p>
+          <h4 data-zh="数据流与传输协议 — Middleware 问题" data-en="Data Flow & Protocols — Middleware Issues" data-ja="データフローとプロトコル — ミドルウェアの問題">数据流与传输协议 — Middleware 问题</h4>
+          <p data-zh="中期的犀川开始处理更抽象的中间件问题：符号系统的污染（Vol.4 诗的多义性）、历史数据的缓存失效（Vol.5 50年前的封印）、注意力的会话劫持（Vol.6 魔术表演）、记忆的对象克隆（Vol.7 萌絵的过去）。这一阶段他像是一个中间件架构师，关注的是数据如何在系统间流动、被存储、被解释。物理层面的理解不再足够，需要理解协议、编码、状态管理。" data-en="In the mid phase, Saikawa begins handling more abstract middleware issues: symbol system pollution (Vol.4 Poetic Ambiguity), historical data cache invalidation (Vol.5 50-year-old Seal), attention session hijacking (Vol.6 Magic Show), memory object cloning (Vol.7 Moe's Past). At this stage, he's like a middleware architect, focusing on how data flows between systems, is stored, and interpreted. Physical understanding is no longer sufficient; one must understand protocols, encoding, state management." data-ja="中期の犀川はより抽象的なミドルウェアの問題を処理し始める：シンボルシステムの汚染（Vol.4 詩の多義性）、履歴データのキャッシュ無効化（Vol.5 50年前の封印）、注意力のセッションハイジャック（Vol.6 マジックショー）、記憶のオブジェクトクローン（Vol.7 萌絵の過去）。この段階では彼はミドルウェアアーキテクトのようで、データがシステム間でどのように流れ、保存され、解釈されるかに注目している。物理的な理解だけでは不十分で、プロトコル、エンコーディング、状態管理を理解する必要がある。">中期的犀川开始处理<strong>更抽象的中间件问题</strong>：符号系统的污染（Vol.4 诗的多义性）、历史数据的缓存失效（Vol.5 50年前的封印）、注意力的会话劫持（Vol.6 魔术表演）、记忆的对象克隆（Vol.7 萌絵的过去）。这一阶段他像是一个<strong>中间件架构师</strong>，关注的是<strong>数据如何在系统间流动、被存储、被解释</strong>。物理层面的理解不再足够，需要理解<strong>协议、编码、状态管理</strong>。</p>
         </div>
       </div>
 
       <div class="evo-stage">
         <div>
-          <div class="evo-label tag-sm">后期 Vol.08-10</div>
+          <div class="evo-label tag-sm" data-zh="后期 Vol.08-10" data-en="Late Vol.08-10" data-ja="後期 Vol.08-10">后期 Vol.08-10</div>
         </div>
         <div class="evo-content">
-          <h4>系统级哲学死锁 — 底层架构定义</h4>
-          <p>后期的犀川面对的是<strong>系统级的哲学问题</strong>：时间的不可逆性（Vol.8「现在已经不存在」）、身份的哈希碰撞（Vol.9 模型与真人）、存在本身的容器逃逸（Vol.10 有限与无限）。这一阶段他已经成为真正的<strong>系统架构师</strong>，思考的不再是具体的bug，而是<strong>系统设计的根本假设</strong>：什么是时间？什么是身份？什么是存在？当他在Vol.10再次面对四季时，他理解了——<strong>有些问题不是用来解决的，而是用来共存的</strong>。架构师的终极能力不是修复所有bug，而是<strong>理解哪些「bug」其实是「feature」</strong>。</p>
+          <h4 data-zh="系统级哲学死锁 — 底层架构定义" data-en="System-Level Philosophy Deadlock — Core Architecture Definition" data-ja="システムレベルの哲学的デッドロック — 基盤アーキテクチャ定義">系统级哲学死锁 — 底层架构定义</h4>
+          <p data-zh="后期的犀川面对的是系统级的哲学问题：时间的不可逆性（Vol.8「现在已经不存在」）、身份的哈希碰撞（Vol.9 模型与真人）、存在本身的容器逃逸（Vol.10 有限与无限）。这一阶段他已经成为真正的系统架构师，思考的不再是具体的bug，而是系统设计的根本假设：什么是时间？什么是身份？什么是存在？当他在Vol.10再次面对四季时，他理解了——有些问题不是用来解决的，而是用来共存的。架构师的终极能力不是修复所有bug，而是理解哪些「bug」其实是「feature」。" data-en="In the late phase, Saikawa faces system-level philosophical problems: time's irreversibility (Vol.8 'Now No Longer Exists'), identity hash collision (Vol.9 Model vs Real Person), container escape of existence itself (Vol.10 Finite & Infinite). At this stage, he has become a true system architect, thinking not about specific bugs but fundamental assumptions of system design: What is time? What is identity? What is existence? When he faces Shiki again in Vol.10, he understands—some problems aren't meant to be solved, but to coexist with. The architect's ultimate ability isn't fixing all bugs, but understanding which 'bugs' are actually 'features.'" data-ja="後期の犀川はシステムレベルの哲学的問題に直面する：時間の不可逆性（Vol.8「今はもうない」）、アイデンティティのハッシュ衝突（Vol.9 モデルと本物）、存在そのもののコンテナエスケープ（Vol.10 有限と無限）。この段階では彼は真のシステムアーキテクトとなり、具体的なバグではなくシステム設計の根本的な仮定について考える：時間とは何か？アイデンティティとは何か？存在とは何か？Vol.10で再び四季と対峙したとき、彼は理解した——いくつかの問題は解決するためではなく、共存するためのものだ。アーキテクトの究極の能力はすべてのバグを修正することではなく、どの「バグ」が実際には「機能」であるかを理解することだ。">后期的犀川面对的是<strong>系统级的哲学问题</strong>：时间的不可逆性（Vol.8「现在已经不存在」）、身份的哈希碰撞（Vol.9 模型与真人）、存在本身的容器逃逸（Vol.10 有限与无限）。这一阶段他已经成为真正的<strong>系统架构师</strong>，思考的不再是具体的bug，而是<strong>系统设计的根本假设</strong>：什么是时间？什么是身份？什么是存在？当他在Vol.10再次面对四季时，他理解了——<strong>有些问题不是用来解决的，而是用来共存的</strong>。架构师的终极能力不是修复所有bug，而是<strong>理解哪些「bug」其实是「feature」</strong>。</p>
         </div>
       </div>
 
       <div class="evo-stage">
         <div>
-          <div class="evo-label tag-g">演进总结</div>
+          <div class="evo-label tag-g" data-zh="演进总结" data-en="Evolution Summary" data-ja="進化のまとめ">演进总结</div>
         </div>
         <div class="evo-content">
-          <h4>从 Debug 到 Design — 架构师的觉醒</h4>
-          <p>犀川的演进轨迹映射了一个工程师的成长路径：从<strong>硬件层面的问题排查</strong>，到<strong>中间件的数据流分析</strong>，最终到达<strong>系统哲学的架构思考</strong>。他与真贺田四季的关系，本质上是<code>User</code>与<code>Root</code>的关系——用户永远无法完全理解系统设计者的意图，但可以通过使用系统来逐渐接近那个意图。<strong>S&M系列的结局不是犀川「解决」了四季，而是他「理解」了四季</strong>——理解她为何这样设计这个系统，以及为何这个系统必须被超越。</p>
+          <h4 data-zh="从 Debug 到 Design — 架构师的觉醒" data-en="From Debug to Design — Architect's Awakening" data-ja="デバッグからデザインへ — アーキテクトの覚醒">从 Debug 到 Design — 架构师的觉醒</h4>
+          <p data-zh="犀川的演进轨迹映射了一个工程师的成长路径：从硬件层面的问题排查，到中间件的数据流分析，最终到达系统哲学的架构思考。他与真贺田四季的关系，本质上是User与Root的关系——用户永远无法完全理解系统设计者的意图，但可以通过使用系统来逐渐接近那个意图。S&M系列的结局不是犀川「解决」了四季，而是他「理解」了四季——理解她为何这样设计这个系统，以及为何这个系统必须被超越。" data-en="Saikawa's evolution trajectory maps an engineer's growth path: from hardware-level troubleshooting, to middleware data flow analysis, finally reaching system philosophy architectural thinking. His relationship with Magata Shiki is essentially User vs Root—users can never fully understand the system designer's intent, but can gradually approach it through using the system. The S&M Series ending isn't Saikawa 'solving' Shiki, but 'understanding' her—understanding why she designed the system this way, and why the system must be transcended." data-ja="犀川の進化軌跡はエンジニアの成長パスを映し出す：ハードウェアレベルの問題調査から、ミドルウェアのデータフロー分析、そして最終的にシステム哲学のアーキテクチャ思考に至る。彼と真賀田四季の関係は本質的にUserとRootの関係である——ユーザーはシステム設計者の意図を完全に理解することはできないが、システムを使用することでその意図に徐々に近づくことができる。S&Mシリーズの結末は犀川が四季を「解決」したのではなく、彼女を「理解」したことである——なぜ彼女がこのようにシステムを設計したのか、そしてなぜこのシステムが超越されなければならないのかを理解した。">犀川的演进轨迹映射了一个工程师的成长路径：从<strong>硬件层面的问题排查</strong>，到<strong>中间件的数据流分析</strong>，最终到达<strong>系统哲学的架构思考</strong>。他与真贺田四季的关系，本质上是<code>User</code>与<code>Root</code>的关系——用户永远无法完全理解系统设计者的意图，但可以通过使用系统来逐渐接近那个意图。<strong>S&M系列的结局不是犀川「解决」了四季，而是他「理解」了四季</strong>——理解她为何这样设计这个系统，以及为何这个系统必须被超越。</p>
         </div>
       </div>
     </div>
   </div>
 
   <footer class="footer">
-    <p>森博嗣 · 全系架构图谱 — 从逻辑的单元测试到意识的分布式存储</p>
+    <p data-zh="森博嗣 · 全系架构图谱 — 从逻辑的单元测试到意识的分布式存储" data-en="Mori Hiroshi · Universe Architecture Map — From Logic Unit Testing to Distributed Consciousness" data-ja="森博嗣 · 全系アーキテクチャマップ — ロジックの単体テストから意識の分散ストレージへ">森博嗣 · 全系架构图谱 — 从逻辑的单元测试到意识的分布式存储</p>
     <p style="margin-top: 0.5rem;"><span class="footer-brand">Built for Web3 · Mori Universe</span></p>
   </footer>
 </div>
@@ -781,6 +828,42 @@ function showTab(tabId) {
   document.getElementById(tabId).classList.add('active');
   event.target.classList.add('active');
 }
+
+// Language switching functionality
+function switchLang(lang) {
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+        const text = el.getAttribute('data-' + lang);
+        if (text) {
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                el.placeholder = text;
+            } else {
+                el.textContent = text;
+            }
+        }
+    });
+    // Update button active state
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    // Update html lang attribute
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : (lang === 'ja' ? 'ja' : 'en');
+    localStorage.setItem('mori-lang', lang);
+}
+
+// Auto-detect browser language
+function detectLang() {
+    const saved = localStorage.getItem('mori-lang');
+    if (saved) return saved;
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang.startsWith('ja')) return 'ja';
+    if (browserLang.startsWith('zh')) return 'zh';
+    return 'en';
+}
+
+// Apply language on page load
+document.addEventListener('DOMContentLoaded', () => {
+    switchLang(detectLang());
+});
 
 function capturePageAsImage() {
     const btn = document.querySelector('.screenshot-btn');
