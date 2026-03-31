@@ -8,6 +8,10 @@
 !interface/
 !interface/**
 
+# 允许 shiki/ 目录下的内容
+!shiki/
+!shiki/**
+
 # 允许 .gitignore 自身
 !.gitignore
 
@@ -20,7 +24,8 @@
 __pycache__/
 .qoder/
 F——大型Unix系统讲义
-shiki/
 everything_becomes_f/
 tests/
 Gemini
+notes/
+.pytest_cache

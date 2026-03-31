@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全部成为F · 运行时日志</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+:root {
+    --bg-primary: #FAFBFC;
+    --bg-secondary: #F0F2F5;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A2E;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+    --accent-red: #E63946;
+    --accent-red-light: #FEE2E2;
+    --accent-red-dark: #991B1B;
+    --accent-purple: #7C3AED;
+    --accent-purple-light: #EDE9FE;
+    --border: #E5E7EB;
+    --border-subtle: #F3F4F6;
+    /* Episode colors */
+    --white: #6B7280;
+    --amber: #D97706;
+    --red: #E63946;
+    --diamond: #0891B2;
+    --blue: #2563EB;
+    --yellow: #CA8A04;
+    --silver: #6B7280;
+    --green: #16A34A;
+    --purple: #7C3AED;
+    --crimson: #DC2626;
+    --f-gold: #DB2777;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: "Inter", -apple-system, "Noto Sans SC", sans-serif;
+    line-height: 1.8;
+    padding: 3rem 2rem;
+    min-height: 100vh;
+}
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(230, 57, 70, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(230, 57, 70, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: -1;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* Header */
+h1 {
+    text-align: center;
+    font-family: "IBM Plex Mono", "Courier New", monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+    color: var(--text-primary);
+}
+.subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 3.5rem;
+}
+.subtitle code {
+    background: var(--accent-red-light);
+    border: none;
+    color: var(--accent-red);
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+}
+
+/* Phase Group */
+.phase-group {
+    background: var(--bg-card);
+    border-left: 3px solid var(--accent-red);
+    padding: 24px 32px;
+    margin: 16px 0;
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.phase-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+}
+.phase-num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    background: var(--accent-red-light);
+    color: var(--accent-red);
+}
+.phase-title {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.phase-title-en {
+    font-size: 0.78rem;
+    color: var(--text-tertiary);
+    font-style: italic;
+    margin-left: 0.5rem;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+    padding-left: 2.5rem;
+}
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.9rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--accent-red);
+    opacity: 0.3;
+}
+
+/* Episode Card */
+.episode {
+    position: relative;
+    margin-bottom: 1.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.3rem 1.5rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.episode:hover {
+    border-color: var(--accent-red);
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.08);
+}
+.episode::before {
+    content: '';
+    position: absolute;
+    left: -1.85rem;
+    top: 1.6rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-red);
+    background: var(--accent-red);
+    z-index: 2;
+}
+.ep-top {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 0.7rem;
+    flex-wrap: wrap;
+}
+.ep-badge {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    background: var(--accent-red-light);
+    color: var(--accent-red);
+}
+.ep-name-cn {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+.ep-name-en {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-style: italic;
+}
+.ep-sys {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+}
+.ep-sys-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+}
+.sys-tag {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 0.1rem 0;
+    background: var(--accent-purple-light);
+    color: var(--accent-purple);
+}
+.ep-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    padding-left: 0.2rem;
+}
+
+/* Final episode highlight */
+.episode.final {
+    border-color: var(--accent-red);
+    background: linear-gradient(135deg, rgba(230, 57, 70, 0.03) 0%, var(--bg-secondary) 60%);
+}
+
+code {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    background: var(--accent-purple-light);
+    color: var(--accent-purple);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+footer, .footer {
+    text-align: center;
+    padding: 40px 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    border-top: 1px solid var(--border);
+    margin-top: 3rem;
+    line-height: 2;
+}
+.footer code {
+    font-size: 11px;
+}
+
+@media (max-width: 768px) {
+    body { padding: 1.5rem 0.8rem; }
+    h1 { font-size: 1.4rem; }
+    .timeline { padding-left: 2rem; }
+    .episode { padding: 1rem 1.1rem; }
+    .episode::before { left: -1.55rem; }
+    .phase-group { padding: 16px 20px; }
+}
+
+.screenshot-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: white;
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    transition: all 150ms;
+}
+.screenshot-btn:hover {
+    background: var(--accent-red);
+    color: white;
+}
+@media print {
+    .screenshot-btn { display: none !important; }
+}
+
+.lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 160px;
+    z-index: 9999;
+    display: flex;
+    gap: 4px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px;
+}
+.lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: "IBM Plex Mono", monospace;
+    transition: all 150ms;
+}
+.lang-btn:hover { color: var(--text-primary); }
+.lang-btn.active {
+    background: var(--accent-red);
+    color: white;
+}
+@media print { .lang-switcher { display: none !important; } }
+</style>
+</head>
+<body>
+<div class="lang-switcher">
+  <button class="lang-btn" onclick="switchLang('zh')" data-lang="zh">中文</button>
+  <button class="lang-btn" onclick="switchLang('en')" data-lang="en">EN</button>
+  <button class="lang-btn" onclick="switchLang('ja')" data-lang="ja">日本語</button>
+</div>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片"><span data-zh="📸 保存为图片" data-en="📸 Save as Image" data-ja="📸 画像として保存">📸 保存为图片</span></button>
+<div class="container">
+
+  <h1 data-zh="《全部成为F》 · 运行时日志" data-en="The Perfect Insider · Runtime Log" data-ja="『すべてがFになる』 · ランタイムログ">《全部成为F》 · 运行时日志</h1>
+  <p class="subtitle">すべてがFになる &mdash; Runtime Log &middot; State Machine Trace &middot; <code>exit(0xF)</code></p>
+
+  <!-- ═══════════════════════════════════════ Phase 1 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 1</span>
+      <span class="phase-title" data-zh="系统的"冷启动"与环境检查" data-en="System Cold Boot & Environment Probe" data-ja="システムの「コールドブート」と環境チェック">系统的"冷启动"与环境检查</span>
+      <span class="phase-title-en">Cold Boot &amp; Environment Probe</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 1 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.01</span>
+          <span class="ep-name-cn">白色聚会</span>
+          <span class="ep-name-en">White Meeting</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">System Init</span>
+          <span class="sys-tag">白盒测试</span>
+        </div>
+        <p class="ep-desc">所有变量处于初始状态。犀川和萌绘进入研究所，就像是探针进入了一个封闭的容器——白盒测试的起点。</p>
+      </div>
+
+      <!-- Ep 2 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.02</span>
+          <span class="ep-name-cn">琥珀色的中庭</span>
+          <span class="ep-name-en">Amber Court</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">Sandbox</span>
+          <span class="sys-tag">Encapsulation</span>
+          <span class="sys-tag">Air-gapped System</span>
+        </div>
+        <p class="ep-desc">琥珀象征被冻结的时间。真贺田研究所作为物理层面的隔离环境——一个与外界完全断开的气隙系统。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ Phase 2 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 2</span>
+      <span class="phase-title" data-zh="访问控制与核心内核" data-en="Access Control & Kernel" data-ja="アクセス制御とコアカーネル">访问控制与核心内核</span>
+      <span class="phase-title-en">Access Control &amp; Kernel</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 3 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.03</span>
+          <span class="ep-name-cn">魔力红</span>
+          <span class="ep-name-en">Magic Red</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">OS Kernel</span>
+          <span class="sys-tag">底层驱动</span>
+        </div>
+        <p class="ep-desc">全书最硬核的节点——Red Magic 操作系统。章节名直接指向系统的逻辑中枢，主角接触到了内核层。</p>
+      </div>
+
+      <!-- Ep 4 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.04</span>
+          <span class="ep-name-cn">七颗钻石</span>
+          <span class="ep-name-en">Seven Diamonds</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">Primary Key</span>
+          <span class="sys-tag">Unique Constraint</span>
+        </div>
+        <p class="ep-desc">"7"——那个孤独的数字。不可分割、无法约简的核心数据位（Bit），系统全局唯一约束。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ Phase 3 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 3</span>
+      <span class="phase-title" data-zh="I/O 交互与边界测试" data-en="I/O Stream & Boundary Testing" data-ja="I/O 交互と境界テスト">I/O 交互与边界测试</span>
+      <span class="phase-title-en">I/O Stream &amp; Boundary Testing</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 5 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.05</span>
+          <span class="ep-name-cn">蓝色水域</span>
+          <span class="ep-name-en">Blue Water</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">I/O Stream</span>
+          <span class="sys-tag">Peripheral Interface</span>
+        </div>
+        <p class="ep-desc">研究所被海水包围，象征数据的流动边界——外围设备接口层，信息在此进出。</p>
+      </div>
+
+      <!-- Ep 6 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.06</span>
+          <span class="ep-name-cn">黄色边缘</span>
+          <span class="ep-name-en">Yellow Edge</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">Boundary Condition</span>
+          <span class="sys-tag">Edge Case</span>
+          <span class="sys-tag">⚠ WARNING</span>
+        </div>
+        <p class="ep-desc">触及逻辑的极限。黄色在工程中代表"警告"，系统开始出现非预期的报错——死尸出现。</p>
+      </div>
+
+      <!-- Ep 7 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.07</span>
+          <span class="ep-name-cn">银色边界</span>
+          <span class="ep-name-en">Silver Boundary</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">Interface</span>
+          <span class="sys-tag">Middleware</span>
+        </div>
+        <p class="ep-desc">银色代表金属感和人造物。物理密室与逻辑密室的交界点——中间件层，协调上下文切换。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ Phase 4 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 4</span>
+      <span class="phase-title" data-zh="递归调用与内存寻址" data-en="Recursive Call & Memory Addressing" data-ja="再帰呼び出しとメモリアドレッシング">递归调用与内存寻址</span>
+      <span class="phase-title-en">Recursive Call &amp; Memory Addressing</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 8 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.08</span>
+          <span class="ep-name-cn">绿色起源</span>
+          <span class="ep-name-en">Green Origin</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">Source Code</span>
+          <span class="sys-tag">Root Directory</span>
+          <span class="sys-tag">Traceability</span>
+        </div>
+        <p class="ep-desc">回溯真贺田四季的出生与过去。在系统中，这是溯源——寻找 Bug 被首次定义的初始位置。</p>
+      </div>
+
+      <!-- Ep 9 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.09</span>
+          <span class="ep-name-cn">紫色记忆</span>
+          <span class="ep-name-en">Purple Memory</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">Buffer</span>
+          <span class="sys-tag">Cache</span>
+          <span class="sys-tag">Memory Dump</span>
+        </div>
+        <p class="ep-desc">通过对四季过去的回忆，主角在提取被系统"隐藏"或"挂起"的数据——唤醒 Suspended Processes。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════ Phase 5 ═══════════════════════════════════════ -->
+  <div class="phase-group">
+    <div class="phase-header">
+      <span class="phase-num">PHASE 5</span>
+      <span class="phase-title" data-zh="逻辑爆炸与系统停机" data-en="Logic Explosion & System Shutdown" data-ja="ロジック爆発とシステムシャットダウン">逻辑爆炸与系统停机</span>
+      <span class="phase-title-en">Logic Explosion &amp; System Shutdown</span>
+    </div>
+
+    <div class="timeline">
+      <!-- Ep 10 -->
+      <div class="episode">
+        <div class="ep-top">
+          <span class="ep-badge">EP.10</span>
+          <span class="ep-name-cn">深红色的广场</span>
+          <span class="ep-name-en">Crimson Square</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">Deadlock</span>
+          <span class="sys-tag">Critical Section</span>
+          <span class="sys-tag">Race Condition</span>
+        </div>
+        <p class="ep-desc">广场是所有人汇聚的地方，逻辑矛盾在此集中爆发。系统进入争用状态——临界区内的死锁。</p>
+      </div>
+
+      <!-- Ep 11 — FINAL -->
+      <div class="episode final">
+        <div class="ep-top">
+          <span class="ep-badge">EP.11 ◈ FINAL</span>
+          <span class="ep-name-cn">全部成为F</span>
+          <span class="ep-name-en">Everything Becomes F</span>
+        </div>
+        <div class="ep-sys">
+          <span class="ep-sys-label">SYS_CALL →</span>
+          <span class="sys-tag">Integer Overflow</span>
+          <span class="sys-tag">Termination</span>
+          <span class="sys-tag">return 0xFFFFFFFF</span>
+        </div>
+        <p class="ep-desc">当计数器累加到 32 位的极限，系统不再处理任何逻辑，直接执行了退出操作。这不仅是真贺田四季的逃脱，也是这段"程序"运行完毕后的 <code>Exit Code</code>。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    FROM F TO ∞ · Built for Web7 · Mori Universe<br>
+    <code>init()</code> → <code>sandbox()</code> → <code>kernel()</code> → <code>io_test()</code> → <code>mem_dump()</code> → <code>deadlock()</code> → <code>return 0xF;</code><br>
+    <span data-zh="一个完整的算法执行流程图 — 从冷启动到缓冲区溢出的全生命周期" data-en="A complete algorithm execution flow — From cold boot to buffer overflow lifecycle" data-ja="完全なアルゴリズム実行フロー図 — コールドブートからバッファオーバーフローまでのライフサイクル">一个完整的算法执行流程图 &mdash; 从冷启动到缓冲区溢出的全生命周期</span>
+  </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+function switchLang(lang) {
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+        el.textContent = el.getAttribute('data-' + lang);
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    localStorage.setItem('mori-lang', lang);
+}
+
+function detectLang() {
+    const saved = localStorage.getItem('mori-lang');
+    if (saved) return saved;
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang.startsWith('ja')) return 'ja';
+    if (browserLang.startsWith('zh')) return 'zh';
+    return 'en';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchLang(detectLang());
+});
+
+function capturePageAsImage() {
+    const btn = document.querySelector('.screenshot-btn');
+    const originalText = btn.textContent;
+    btn.textContent = '⏳ 正在生成...';
+    btn.disabled = true;
+    btn.style.display = 'none';
+    
+    html2canvas(document.body, {
+        backgroundColor: '#FAFBFC',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        windowWidth: document.body.scrollWidth,
+        windowHeight: document.body.scrollHeight
+    }).then(function(canvas) {
+        btn.style.display = '';
+        btn.textContent = originalText;
+        btn.disabled = false;
+        
+        var link = document.createElement('a');
+        link.download = document.title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_') + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }).catch(function(err) {
+        btn.style.display = '';
+        btn.textContent = originalText;
+        btn.disabled = false;
+        alert('截图失败: ' + err.message);
+    });
+}
+</script>
+</body>
+</html>

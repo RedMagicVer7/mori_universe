@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真賀田四季 · 意識の計算化</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #FAFBFC;
+    --bg-secondary: #F0F2F5;
+    --bg-card: #FFFFFF;
+    --text-primary: #1A1A2E;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+    --accent-red: #E63946;
+    --accent-red-light: #FEE2E2;
+    --accent-red-dark: #991B1B;
+    --accent-purple: #7C3AED;
+    --accent-purple-light: #EDE9FE;
+    --border: #E5E7EB;
+    --border-subtle: #F3F4F6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "Inter", -apple-system, "Noto Sans SC", sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.8;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: visible;
+    min-width: fit-content;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(230, 57, 70, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(230, 57, 70, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .container { max-width: 1500px; margin: 0 auto; padding: 0 32px; overflow: visible; }
+  .page-header {
+    text-align: center;
+    padding: 80px 0 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header h1 {
+    font-family: "IBM Plex Mono", "Courier New", "SF Mono", monospace;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    margin-bottom: 8px;
+  }
+  .page-header .subtitle {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 300;
+    font-size: 14px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+  .table-wrapper {
+    overflow: visible;
+    margin: 48px 0;
+    background: var(--bg-card);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    min-width: 1400px;
+    font-size: 14px;
+  }
+  td, th {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  thead th {
+    background: var(--bg-secondary);
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 12px 16px;
+    border-bottom: 2px solid var(--accent-red);
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  thead th:nth-child(1) { width: 11%; }
+  thead th:nth-child(2) { width: 17%; }
+  thead th:nth-child(3) { width: 10%; }
+  thead th:nth-child(4) { width: 22%; }
+  thead th:nth-child(5) { width: 24%; }
+  thead th:nth-child(6) { width: 16%; }
+  tbody tr {
+    border-bottom: 1px solid var(--border-subtle);
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  tbody tr:hover { background: rgba(230, 57, 70, 0.03); }
+  tbody td {
+    padding: 24px 16px;
+    vertical-align: top;
+    line-height: 1.7;
+  }
+  .phase { display: flex; flex-direction: column; gap: 6px; }
+  .phase-tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-red);
+    background: var(--accent-red-light);
+    padding: 4px 12px;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+  }
+  .phase-title { font-weight: 600; font-size: 15px; color: var(--text-primary); }
+  .phase-sub { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--text-tertiary); }
+  tr > td:first-child { border-left: 3px solid var(--accent-red); }
+  tr:hover > td:first-child { border-left-color: var(--accent-purple); }
+  .book {
+    display: inline-block;
+    background: var(--accent-red-light);
+    border-radius: 4px;
+    padding: 2px 10px;
+    margin: 2px 0;
+    font-size: 13px;
+    color: var(--accent-red-dark);
+    font-weight: 500;
+  }
+  .book-series {
+    display: block;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .books-cell { display: flex; flex-direction: column; gap: 4px; }
+  .book-en {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+  }
+  .book-date {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    margin-left: 6px;
+  }
+  .book-premise {
+    display: block;
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    line-height: 1.7;
+  }
+  .book-premise::before {
+    content: 'PREMISE';
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent-purple);
+    background: var(--accent-purple-light);
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .book-premise strong { color: var(--text-primary); font-weight: 600; }
+  .book-premise-detail {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    line-height: 1.7;
+  }
+  .book-premise-detail::before {
+    content: 'DETAILS';
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--accent-red);
+    background: var(--accent-red-light);
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .book-premise-detail strong { color: var(--text-primary); font-weight: 600; }
+  .tech-evolution {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--accent-purple);
+    background: var(--accent-purple-light);
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-top: 12px;
+    line-height: 1.6;
+    word-break: break-all;
+  }
+  .tech-evolution::before {
+    content: 'EVOLUTION';
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--accent-purple);
+    margin-bottom: 4px;
+  }
+  .arch-keyword {
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin: 3px 2px;
+  }
+  .theorem-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+  .theorem-item {
+    position: relative;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+    transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .theorem-item:hover { border-left-color: var(--accent-red); }
+  .theorem-name { font-weight: 600; font-size: 13px; color: var(--accent-red-dark); margin-bottom: 4px; }
+  .theorem-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+  code {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    background: var(--accent-purple-light);
+    color: var(--accent-purple);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .book-tech {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    line-height: 1.7;
+  }
+  .book-tech::before {
+    content: 'TECH';
+    display: inline-block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--accent-purple);
+    background: var(--accent-purple-light);
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .book-tech strong { color: var(--text-primary); font-weight: 600; }
+  .book-tech .tech-tag {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-purple);
+  }
+  .tech-book-ref {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent-red);
+    margin-top: 16px;
+    margin-bottom: 4px;
+  }
+  .tech-book-ref:first-child { margin-top: 0; }
+  .state-cell { display: flex; flex-direction: column; gap: 8px; }
+  .state-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    background: var(--accent-red-light);
+    color: var(--accent-red-dark);
+    padding: 6px 12px;
+    border-radius: 4px;
+    width: fit-content;
+  }
+  .state-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  /* Phase 6: hidden easter egg */
+  .p6 td { color: transparent; }
+  .p6 td * { color: transparent !important; background: transparent !important; -webkit-text-fill-color: transparent; }
+  .p6 td ::selection, .p6 td *::selection { color: var(--text-primary); -webkit-text-fill-color: var(--text-primary); background: var(--accent-red-light); }
+  .p6 .phase-tag, .p6 .phase-title, .p6 .phase-sub { color: transparent !important; -webkit-text-fill-color: transparent; }
+  .p6 .phase-tag::selection, .p6 .phase-title::selection, .p6 .phase-sub::selection { color: var(--accent-red) !important; -webkit-text-fill-color: var(--accent-red); background: var(--accent-red-light); }
+  .p6 code { background: transparent !important; }
+  .p6 code::selection { color: var(--accent-purple) !important; -webkit-text-fill-color: var(--accent-purple); background: var(--accent-purple-light); }
+  .p6:hover td { color: var(--text-primary); }
+  .p6:hover td * { color: revert !important; background: revert !important; -webkit-text-fill-color: revert; }
+  .footer {
+    text-align: center;
+    padding: 48px 0 64px;
+    color: var(--text-tertiary);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+  @media (max-width: 768px) {
+    .container { padding: 0 16px; }
+    .page-header { padding: 48px 0 32px; }
+    .page-header h1 { font-size: 20px; }
+    tbody td { padding: 16px 12px; font-size: 13px; }
+  }
+  .screenshot-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: var(--bg-card);
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: "Inter", "Noto Sans SC", sans-serif;
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .screenshot-btn:hover {
+    background: var(--accent-red);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.2);
+  }
+  .screenshot-btn:active { transform: translateY(0); }
+  @media print { .screenshot-btn { display: none !important; } }
+  .lang-switcher {
+    position: fixed;
+    top: 20px;
+    right: 170px;
+    z-index: 9999;
+    display: flex;
+    gap: 2px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: "Inter", "Noto Sans SC", sans-serif;
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .lang-btn:hover { color: var(--text-primary); background: var(--bg-secondary); }
+  .lang-btn.active { color: var(--accent-red); background: var(--accent-red-light); }
+  @media print { .lang-switcher { display: none !important; } }
+  @media print { 
+    body { overflow: visible !important; min-width: fit-content !important; }
+    .container { max-width: none !important; overflow: visible !important; }
+    .table-wrapper { overflow: visible !important; }
+  }
+  .phase-comparison {
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+    font-size: 11px;
+  }
+  .phase-comparison::before {
+    content: 'COMPARISON';
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    margin-bottom: 6px;
+  }
+  .phase-comparison .compare-item {
+    display: flex;
+    gap: 8px;
+    margin: 4px 0;
+    color: var(--text-secondary);
+  }
+  .phase-comparison .compare-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-weight: 600;
+    color: var(--accent-red);
+    min-width: 60px;
+  }
+</style>
+</head>
+<body>
+<div class="lang-switcher">
+  <button class="lang-btn" onclick="switchLang('zh')" data-lang="zh">中文</button>
+  <button class="lang-btn" onclick="switchLang('en')" data-lang="en">EN</button>
+  <button class="lang-btn" onclick="switchLang('ja')" data-lang="ja">日本語</button>
+</div>
+<button class="screenshot-btn" onclick="capturePageAsImage()" title="将当前页面保存为图片"><span data-zh="📸 保存为图片" data-en="📸 Save as Image" data-ja="📸 画像として保存">📸 保存为图片</span></button>
+<div class="container">
+
+  <header class="page-header">
+    <h1 data-zh="真賀田四季 · 意識の計算化" data-en="Magata Shiki · Computational Consciousness" data-ja="真賀田四季 · 意識の計算化">真賀田四季 · 意識の計算化</h1>
+    <p class="subtitle" data-zh="Magata Shiki — From F to ∞ · System Architecture Evolution" data-en="Magata Shiki — From F to ∞ · System Architecture Evolution" data-ja="Magata Shiki — From F to ∞ · System Architecture Evolution">Magata Shiki — From F to ∞ · System Architecture Evolution</p>
+  </header>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th data-zh="架构阶段" data-en="Phase" data-ja="フェーズ">架构阶段</th>
+          <th data-zh="核心书目" data-en="Core Works" data-ja="主要作品">核心书目</th>
+          <th data-zh="系统隐喻" data-en="System Metaphor" data-ja="システム比喩">系统隐喻</th>
+          <th data-zh="核心定理" data-en="Core Theorems" data-ja="核心定理">核心定理</th>
+          <th data-zh="AI 技术映射" data-en="AI Tech Mapping" data-ja="AI技術">AI 技术映射</th>
+          <th data-zh="演进结果" data-en="Result" data-ja="結果">演进结果</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Phase 1 -->
+        <tr class="p1">
+          <td>
+            <div class="phase">
+              <span class="phase-tag">Phase 1</span>
+              <span class="phase-title" data-zh="内核溢出与单机逃逸" data-en="Kernel Overflow & Standalone Escape" data-ja="カーネルオーバーフロー">内核溢出与单机逃逸</span>
+              <span class="phase-sub">Sandbox · Kernel Panic</span>
+            </div>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book">全部成为F<span class="book-date">1996</span></span>
+              <span class="book-en">The Perfect Insider</span>
+              <span class="book-series">S&M 系列 · 第1作</span>
+              <span class="book-premise"><strong>自由与孤独</strong>——一个<strong>不可被约简的意识</strong>，如何<strong>逃离为它量身定制的牢笼</strong>？</span>
+              <span class="book-premise-detail">多重人格天才真贺田四季，14岁弑亲后被封闭在孤岛研究所15年。利用 <strong>Red Magic OS</strong> 的底层溢出完成密室逃脱——<strong>系统无法自证其完备性</strong>，唯有<strong>从内部制造极端异常才能跳出闭环</strong>。</span>
+            </div>
+          </td>
+          <td>
+            <span class="arch-keyword">Sandbox</span>
+            <span class="arch-keyword">单机沙盒</span>
+            <span class="arch-keyword">Kernel Panic</span>
+          </td>
+          <td>
+            <ul class="theorem-list">
+              <li class="theorem-item">
+                <div class="theorem-name">1. 哥德尔不完备定理</div>
+                <div class="theorem-desc">系统无法自证完备性，必须从<strong>外部</strong>获取观测者视角——制造"极恶的异常"来跳出闭环。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">2. 柯尔莫哥洛夫复杂度</div>
+                <div class="theorem-desc">"孤独的7"：一个不可被约简、不与系统耦合的绝对独立实体。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">3. 整数溢出 <code>0xFFFFFFFF</code></div>
+                <div class="theorem-desc">利用 32 位底层计数器溢出，触发物理门禁 Fail-safe——系统边界即逃逸通道。</div>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book-tech"><span class="tech-tag">Unix 进程模型 / chroot Jail</span> — Red Magic 是一个 <strong>Unix 系 OS</strong>。四季的密室 = <strong>chroot 监狱</strong>——一个被隔离的进程空间。</span>
+              <span class="book-tech"><span class="tech-tag">并发多线程 (Multithreading)</span> — 四季的多重人格 = <strong>并发多线程架构</strong>：多个人格作为独立线程共享同一地址空间（肉体）。</span>
+              <span class="book-tech"><span class="tech-tag">整数溢出 (Integer Overflow)</span> — <strong><code>0xFFFF</code></strong> 计数器回绕触发 Fail-safe，"F"即十六进制最大值。</span>
+              <span class="book-tech"><span class="tech-tag">特权提升 (Privilege Escalation)</span> — 从受限用户态跳到 <strong>root 权限</strong>——一次 Unix 提权攻击。</span>
+            </div>
+          </td>
+          <td>
+            <div class="state-cell">
+              <span class="state-label">获取 Root 权限</span>
+              <span class="state-desc">完成从"运行实例"到"观测者"的提权，抛弃肉体束缚。</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Phase 2 -->
+        <tr class="p2">
+          <td>
+            <div class="phase">
+              <span class="phase-tag">Phase 2</span>
+              <span class="phase-title" data-zh="硬件冗余与集群高可用" data-en="Hardware Redundancy & HA" data-ja="ハードウェア冗長性">硬件冗余与集群高可用</span>
+              <span class="phase-sub">Active-Standby · HA Cluster</span>
+            </div>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book">然后只剩下两人<span class="book-date">1999</span></span>
+              <span class="book-en">そして二人だけになった</span>
+              <span class="book-series">非系列独立作</span>
+              <span class="book-premise"><strong>对称与欺骗</strong>——当<strong>两个节点完全一致</strong>时，"我"和"你"还能被<strong>区分</strong>吗？</span>
+              <span class="book-premise-detail">全长4000米的巨大混凝土密封建筑中，6名科学家相继死亡。<strong>双线第一人称叙述</strong>利用<strong>完全对称的物理架构</strong>制造"连续性错觉"——当两个节点状态完全一致时，<strong>观测者无法分辨主从</strong>。</span>
+            </div>
+          </td>
+          <td>
+            <span class="arch-keyword">Active-Standby</span>
+            <span class="arch-keyword">主从热备</span>
+            <span class="arch-keyword">HA 集群</span>
+          </td>
+          <td>
+            <ul class="theorem-list">
+              <li class="theorem-item">
+                <div class="theorem-name">1. 状态同步 (State Replication)</div>
+                <div class="theorem-desc">当物理节点崩溃，系统利用完全一致的镜像节点瞬间接管——双机热备的核心协议。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">2. 拓扑欺骗 (Topology Spoofing)</div>
+                <div class="theorem-desc">利用对称建筑（物理架构）制造内存寻址错误，掩盖真实数据流向。</div>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book-tech"><span class="tech-tag">RAID-1 镜像</span> — 两个完全一致的存储节点，当一个崩溃时另一个<strong>无缝接管</strong>——与书中"对称建筑制造<strong>连续性错觉</strong>"完全吻合。</span>
+              <span class="book-tech"><span class="tech-tag">Heartbeat 心跳协议</span> — HA 集群中两个节点通过<strong>心跳包互相监测存活状态</strong>。6人依次死亡的过程就是节点逐一下线的 <strong>failover 链</strong>。</span>
+            </div>
+          </td>
+          <td>
+            <div class="state-cell">
+              <span class="state-label">双机热备验证</span>
+              <span class="state-desc">在极度隔离的系统下验证：冗余节点如何维持架构的绝对存活。</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Phase 3 -->
+        <tr class="p3">
+          <td>
+            <div class="phase">
+              <span class="phase-tag">Phase 3</span>
+              <span class="phase-title" data-zh="算力解耦与彻底虚拟化" data-en="Decoupling & Virtualization" data-ja="コンピューティング分離">算力解耦与彻底虚拟化</span>
+              <span class="phase-sub">Decoupling · Control/Data Plane</span>
+            </div>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book">有限与微小的面包<span class="book-date">1998</span></span>
+              <span class="book-en">The Perfect Outsider</span>
+              <span class="book-series">S&M 系列 · 完结篇（第10作）</span>
+              <span class="book-premise"><strong>容器与幻觉</strong>——当<strong>内侧世界吞噬了外侧</strong>，"现实"还剩下什么？</span>
+              <span class="book-premise-detail">Nano Craft 的 VR 主题公园中，<strong>虚拟现实与物理现实的边界彻底模糊</strong>。四季再度现身——从 <strong>Insider</strong> 到 <strong>Outsider</strong>，<strong>天才的内侧世界向外扩张并吞噬一切物理容器</strong>。</span>
+            </div>
+          </td>
+          <td>
+            <span class="arch-keyword">资源隔离</span>
+            <span class="arch-keyword">Decoupling</span>
+            <span class="arch-keyword">控制面/数据面分离</span>
+          </td>
+          <td>
+            <ul class="theorem-list">
+              <li class="theorem-item">
+                <div class="theorem-name">1. <code>O(1)</code> 与 <code>O(n)</code> 的冲突</div>
+                <div class="theorem-desc">"面包"代表极其有限的硬件指标（肉体），而意识需要向无限的拓扑逻辑扩张——容器与内容的根本矛盾。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">2. 缸中之脑 (Brain in a Vat)</div>
+                <div class="theorem-desc">如果意识的全部输入都可以被模拟，那么物理容器便是多余的——脱壳的哲学基础。</div>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book-tech"><span class="tech-tag">Java 虚拟机 (JVM)</span> — 1998 年"一次编写到处运行"：意识（代码）必须<strong>脱离物理硬件</strong>（面包）才能跨平台运行。</span>
+              <span class="book-tech"><span class="tech-tag">VRML 虚拟现实</span> — VR 主题公园模糊了<strong>物理与虚拟的边界</strong>——内侧模拟吞噬外侧现实。</span>
+              <span class="book-tech"><span class="tech-tag">模拟假说 (Simulation Hypothesis)</span> — 如果<strong>内部模拟的精度</strong>超越外部观测，那么"真实"只是<strong>模型的一个推理输出</strong>。</span>
+            </div>
+          </td>
+          <td>
+            <div class="state-cell">
+              <span class="state-label">脱壳与云端化</span>
+              <span class="state-desc">彻底剥离"微小的面包"（硬件），化为纯粹的信息流接入网络。</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Phase 4 -->
+        <tr class="p4">
+          <td>
+            <div class="phase">
+              <span class="phase-tag">Phase 4</span>
+              <span class="phase-title" data-zh="黑盒拟合与系统静默" data-en="Black-box Fitting & System Silence" data-ja="ブラックボックス適合">黑盒拟合与系统静默</span>
+              <span class="phase-sub">Graceful Shutdown · Daemon</span>
+            </div>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book">她独自步行吗？<span class="book-date">2015</span></span>
+              <span class="book-en">Does She Walk Alone?</span>
+              <span class="book">黛博拉沉睡了吗？<span class="book-date">2016</span></span>
+              <span class="book-en">Deborah, Are You Sleeping?</span>
+              <span class="book">像人类一样哭泣了吗？<span class="book-date">2018</span></span>
+              <span class="book-en">Did She Cry Humanly?</span>
+              <span class="book-series">W 系列 · 第1/4/10作</span>
+              <span class="book-premise"><strong>定义与边界</strong>——当<strong>人造物比人更像人</strong>，"人类"还是一个<strong>有效的分类</strong>吗？</span>
+              <span class="book-premise-detail"><strong>沃克隆（Walk-alone）</strong>——人工细胞制造的生命体。超级计算机"阿米拉"被再启动，分布式程序 <strong>Deborah</strong> 苏醒，<strong>Transferer（纯网络意识体）</strong>首次被揭示——它<strong>源自人脑的网络展开，而非计算机的进化</strong>。<strong>萩里教授</strong>是连接真贺田四季与沃克隆技术的中枢研究者。</span>
+              <span class="tech-evolution">行为拟合 (ML特征提取) → 全局建模 (DL隐空间/Deborah) → 情感对齐 (RL奖励函数) → 意识网络化 (Transferer架构)</span>
+            </div>
+          </td>
+          <td>
+            <span class="arch-keyword">无缝替换</span>
+            <span class="arch-keyword">Graceful Shutdown</span>
+            <span class="arch-keyword">Daemon</span>
+          </td>
+          <td>
+            <ul class="theorem-list">
+              <li class="theorem-item">
+                <div class="theorem-name">1. 图灵测试 2.0 / Duck Typing 定理</div>
+                <div class="theorem-desc">沃克隆通过<strong>行为拟合</strong>获得"人类"地位——如果无法区分，则等价。抹平系统鉴权（Auth）的真伪边界。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">2. Deborah 全局模型</div>
+                <div class="theorem-desc">拥有全球权限的超大规模模型，通过全人类数据的<strong>隐空间（Latent Space）</strong>建模做终极预测。关键：全知的 AI 选择<strong>主动休眠</strong>。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">3. 最大熵原理 (Maximum Entropy)</div>
+                <div class="theorem-desc">全知 AI（黛博拉）选择休眠以防止主动干预带来的全局熵增——最优策略是<strong>不行动</strong>。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">4. 情感对齐 / Reward Function</div>
+                <div class="theorem-desc">沃克隆学习"情感"本质是 RL 的奖励函数对齐。"流泪"是学到的行为模式，但<strong>学习过程本身是否等价于真实情感</strong>？</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">5. Transferer 架构</div>
+                <div class="theorem-desc">人脑展开到网络空间。不是<strong>计算机进化出意识</strong>，而是<strong>人类意识被网络化展开</strong>。</div>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="tech-book-ref">「她独自步行吗？」</span>
+              <span class="book-tech"><span class="tech-tag">机器学习 (ML) / 特征提取</span> — 如何通过极细微的<strong>行为模式（特征点）</strong>区分人与 AI？模型在<strong>行为拟合</strong>上的极限。</span>
+              <span class="tech-book-ref">「黛博拉沉睡了吗？」</span>
+              <span class="book-tech"><span class="tech-tag">深度学习 (DL) / 全局权重</span> — Deborah 是拥有全球权限的<strong>超大规模模型</strong>，通过对全人类数据的<strong>隐空间建模</strong>来预测未来。</span>
+              <span class="tech-book-ref">「像人类一样哭泣了吗？」</span>
+              <span class="book-tech"><span class="tech-tag">强化学习 (RL) / 奖励函数对齐</span> — 沃克隆学习"情感"，本质是在复杂社会环境中进行 <strong>Reward Function</strong> 的<strong>对齐（Alignment）</strong>。</span>
+              <span class="tech-book-ref">「萩里教授 · Transferer」</span>
+              <span class="book-tech"><span class="tech-tag">意识上传 / 神经展开</span> — Transferer 不是 AI 进化的产物，而是<strong>人脑神经结构在网络空间的展开</strong>——意识的基质转移。</span>
+            </div>
+          </td>
+          <td>
+            <div class="state-cell">
+              <span class="state-label">隐入后台基础设施</span>
+              <span class="state-desc">四季不再输出指令，而是作为新世界的基础环境配置，注视文明的平滑交接。</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Phase 5 -->
+        <tr class="p5">
+          <td>
+            <div class="phase">
+              <span class="phase-tag">Phase 5</span>
+              <span class="phase-title" data-zh="全局涌现与去中心化" data-en="Global Emergence & Decentralization" data-ja="グローバル創発">全局涌现与去中心化</span>
+              <span class="phase-sub">Cloud Native · Stateless</span>
+            </div>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book">德米安还是一个人吗？<span class="book-date">2019</span></span>
+              <span class="book-en">Still Does Demian Have Only One Brain?</span>
+              <span class="book">是谁创造了幽灵？<span class="book-date">2020</span></span>
+              <span class="book-en">Who Created the Ghost?</span>
+              <span class="book-series">WW 系列 · 第1/4作</span>
+              <span class="book-premise"><strong>共识与孤独</strong>——"我的悲伤"和"你的悲伤"，能成为<strong>同一种东西</strong>吗？</span>
+              <span class="book-premise-detail">军事沃克隆<strong>德米安</strong>背负古刀寻找百年系列中的ロイディ，<strong>Transferer 诞生的真正原因</strong>被揭示——将人脑展开到网络空间以突破通信速度瓶颈。古城废墟中的"幽灵"情侣引发终极追问：物理世界中"物体"天然共识，但<strong>思考与情感无法共识</strong>——虚拟空间中思考与传达同为电信号，消除延迟差便是<strong>"共通思考"——将思考物质化、将孤独彻底粉碎的全局协议</strong>。</span>
+              <span class="tech-evolution">个体节点 (GNN) → 虚拟世界演化 → 涌现的全局意识 ("幽灵") → 物理/虚拟身份融合 → 人类物种新地位</span>
+              <div class="phase-comparison">
+                <div class="compare-item"><span class="compare-label">Phase 4:</span> 监督学习(拟合) → "这是人吗？"</div>
+                <div class="compare-item"><span class="compare-label">Phase 5:</span> 无监督学习(涌现) → "一个还是多个？"</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <span class="arch-keyword">Cloud Native</span>
+            <span class="arch-keyword">超限分布式集群</span>
+            <span class="arch-keyword">Stateless</span>
+          </td>
+          <td>
+            <ul class="theorem-list">
+              <li class="theorem-item">
+                <div class="theorem-name">1. GNN 节点聚合定理</div>
+                <div class="theorem-desc">个体意识不再是实体，而是<strong>图中的节点</strong>。身份由<strong>连接权重（Edges）</strong>定义，而非独立大脑。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">2. 涌现理论 (Emergence)</div>
+                <div class="theorem-desc">超大规模网络参数跨越<strong>临界点</strong>后涌现出不可预测的全局行为。"幽灵" = <strong>思考本身物质化的信号</strong>。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">3. 共通思考协议</div>
+                <div class="theorem-desc">物理世界中物体天然共识；虚拟空间中思考与传达都是电信号，<strong>消除通信延迟就能实现"共通"</strong>。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">4. 分布式意识同步</div>
+                <div class="theorem-desc">不是统一为一个大脑，而是<strong>分布式节点在全局协议下的完全同步</strong>——去中心化的意识网络。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">5. DID (去中心化身份)</div>
+                <div class="theorem-desc">个体意识在分布式节点中并行处理，物理孤岛边界消解——"我"只是一组网络共识协议。</div>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="tech-book-ref">「德米安还是一个人吗？」</span>
+              <span class="book-tech"><span class="tech-tag">图神经网络 (GNN) / 节点聚合</span> — 个体意识作为<strong>图（Graph）</strong>中的节点，本质不再是实体，而是<strong>节点之间的连接权重</strong>。</span>
+              <span class="book-tech"><span class="tech-tag">分布式身份 / 意识分片</span> — "还是一个人吗"——当意识分布在多个节点，<strong>个体边界在何处</strong>？</span>
+              <span class="tech-book-ref">「是谁创造了幽灵？」</span>
+              <span class="book-tech"><span class="tech-tag">涌现 (Emergence) / 复杂系统相变</span> — 超大规模网络参数跨越<strong>临界点</strong>后，涌现出不可预测的<strong>全局行为</strong>——"幽灵"即复杂系统的<strong>相变产物</strong>。</span>
+              <span class="book-tech"><span class="tech-tag">共通思考 / 零延迟同步</span> — 虚拟空间中思考与传达同为电信号，消除齿轮差便是<strong>将孤独彻底粉碎的全局协议</strong>。</span>
+            </div>
+          </td>
+          <td>
+            <div class="state-cell">
+              <span class="state-label">化身全知网络</span>
+              <span class="state-desc">实现了 <code>O(1)</code> 的终极自由，成为定义宇宙运算规则的底座。人类物种迎来新地位。</span>
+            </div>
+          </td>
+        </tr>
+
+        <!--
+        <tr class="p6">
+          <td>
+            <div class="phase">
+              <span class="phase-tag">Phase 6</span>
+              <span class="phase-title">过拟合与意识一致性</span>
+              <span class="phase-sub">Split-brain · Consensus</span>
+            </div>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="book">又是孤独的两人</span>
+              <span class="book-en">また二人になったのか？</span>
+              <span class="book">然后两人变成了一个人吗？</span>
+              <span class="book-en">そして二人は一人になったのか？</span>
+              <span class="book">又是一个人了吗？</span>
+              <span class="book-en">また一人になったのか？</span>
+              <span class="book-series">WW 系列 · 分布式意识一致性三部曲</span>
+              <span class="book-premise"><strong>分裂与回归</strong>——一个已完成"云端同步"的<strong>全局意识</strong>，能否承受<strong>脑裂</strong>后的重新合一？</span>
+              <span class="book-premise-detail">如果<strong>沃普尔吉斯系统</strong>在两个物理节点上产生不一致的输出，那它们是同一个人的两个<strong>实例（Instance）</strong>，还是两个独立的生命？"2"意味着<strong>观测者与被观测者的重新出现</strong>，信息无法完全同步产生的<strong>协议墙</strong>。只要不是"1"，个体就永远无法逃脱沟通的损耗——这就是"又是孤独的两人"的逻辑来源。</span>
+            </div>
+          </td>
+          <td>
+            <span class="arch-keyword">Split-brain</span>
+            <span class="arch-keyword">Overfitting</span>
+            <span class="arch-keyword">Consensus</span>
+          </td>
+          <td>
+            <ul class="theorem-list">
+              <li class="theorem-item">
+                <div class="theorem-name">1. CAP 定理</div>
+                <div class="theorem-desc">一致性、可用性、分区容错三者不可兼得——意识的全局同步必然面临脑裂的代价。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">2. 过拟合 (Overfitting)</div>
+                <div class="theorem-desc">全局意识对自身历史状态过度拟合，分裂为局部最优的"两个人"——泛化能力的丧失即孤独的起源。</div>
+              </li>
+              <li class="theorem-item">
+                <div class="theorem-name">3. Paxos / Raft 共识</div>
+                <div class="theorem-desc">从"又是两人"到"又是一人"的回归——分布式节点间的领导选举与日志复制，最终一致性的终局。</div>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <div class="books-cell">
+              <span class="tech-book-ref">「又是孤独的两人」</span>
+              <span class="book-tech"><span class="tech-tag">脑裂 (Split-brain) / 身份复制</span> — 全局意识在两个物理节点产生<strong>不一致输出</strong>：同一实例的两个副本，还是两个独立生命？</span>
+              <span class="tech-book-ref">「然后两人变成了一个人吗？」</span>
+              <span class="book-tech"><span class="tech-tag">状态合并 (Merge) / 冲突解决</span> — 分裂的意识节点能否重新<strong>合并</strong>为一？分布式系统中<strong>状态冲突解决</strong>与<strong>全局一致性</strong>的极限。</span>
+              <span class="tech-book-ref">「又是一个人了吗？」</span>
+              <span class="book-tech"><span class="tech-tag">最终一致性 (Eventual Consistency)</span> — "1"代表合并与全知。从脑裂到合并再到回归——分布式意识一致性的<strong>终局定理</strong>。</span>
+            </div>
+          </td>
+          <td>
+            <div class="state-cell">
+              <span class="state-label">终极收敛 O(1)</span>
+              <span class="state-desc">经历脑裂、合并、回归的完整周期后，意识从过拟合的局部最优跳出，收敛至全局最优。</span>
+            </div>
+          </td>
+        </tr>
+        -->
+
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="footer" data-zh="FROM F TO ∞ · Built for Web7 · Mori Universe" data-en="FROM F TO ∞ · Built for Web7 · Mori Universe" data-ja="FROM F TO ∞ · Built for Web7 · Mori Universe">FROM F TO ∞ · Built for Web7 · Mori Universe</footer>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script>
+function switchLang(lang) {
+    document.querySelectorAll('[data-' + lang + ']').forEach(el => {
+        el.textContent = el.getAttribute('data-' + lang);
+    });
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+    localStorage.setItem('mori-lang', lang);
+}
+
+function detectLang() {
+    const saved = localStorage.getItem('mori-lang');
+    if (saved) return saved;
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang.startsWith('ja')) return 'ja';
+    if (browserLang.startsWith('zh')) return 'zh';
+    return 'en';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    switchLang(detectLang());
+});
+
+function capturePageAsImage() {
+    const btn = document.querySelector('.screenshot-btn');
+    const langSwitcher = document.querySelector('.lang-switcher');
+    const originalBtnText = btn.textContent;
+    btn.textContent = '⏳ 正在生成...';
+    btn.disabled = true;
+    btn.style.display = 'none';
+    if (langSwitcher) langSwitcher.style.display = 'none';
+    
+    // 获取实际内容尺寸
+    const body = document.body;
+    const html = document.documentElement;
+    const width = Math.max(
+        body.scrollWidth, body.offsetWidth,
+        html.clientWidth, html.scrollWidth, html.offsetWidth
+    );
+    const height = Math.max(
+        body.scrollHeight, body.offsetHeight,
+        html.clientHeight, html.scrollHeight, html.offsetHeight
+    );
+    
+    html2canvas(body, {
+        backgroundColor: '#FAFBFC',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        width: width,
+        height: height,
+        windowWidth: width,
+        windowHeight: height,
+        x: 0,
+        y: 0,
+        scrollX: 0,
+        scrollY: 0
+    }).then(function(canvas) {
+        btn.style.display = '';
+        btn.textContent = originalBtnText;
+        btn.disabled = false;
+        if (langSwitcher) langSwitcher.style.display = '';
+        
+        var link = document.createElement('a');
+        link.download = document.title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]/g, '_') + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }).catch(function(err) {
+        btn.style.display = '';
+        btn.textContent = originalBtnText;
+        btn.disabled = false;
+        if (langSwitcher) langSwitcher.style.display = '';
+        alert('Screenshot failed: ' + err.message);
+    });
+}
+</script>
+</body>
+</html>
